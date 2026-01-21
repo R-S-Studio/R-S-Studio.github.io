@@ -130,6 +130,60 @@
             color: #555;
         }
 
+                /* 覆盖导航li的布局，让名字显示在按钮下方 */
+        #header nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        #header nav li {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: auto;
+            line-height: normal;
+            width: auto;
+        }
+
+        /* 禁用状态 */
+        #header nav li a.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* 名字标签 */
+        .link-name {
+            margin-top: 8px;
+            font-size: 0.75em;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 0.05em;
+        }
+
+        /* 响应式 */
+        @media screen and (max-width: 736px) {
+            #header nav ul {
+                gap: 10px;
+            }
+            
+            .link-name {
+                font-size: 0.65em;
+                margin-top: 6px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            #header nav ul {
+                gap: 8px;
+            }
+            
+            .link-name {
+                font-size: 0.6em;
+            }
+        }
+
         /* 可选：减少动画偏好的用户 */
         @media (prefers-reduced-motion: reduce) {
             .rain-line {

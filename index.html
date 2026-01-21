@@ -117,9 +117,9 @@
 
 			.content-section h2 {
 				color: #ffffff;
-				font-size: 2rem;
-				font-weight: 300;
-				margin-bottom: 1.5rem;
+				font-size: 2.5rem;
+				font-weight: 600;
+				margin-bottom: 2rem;
 				letter-spacing: 0.1rem;
 			}
 
@@ -130,7 +130,40 @@
 				margin-bottom: 1.5rem;
 			}
 
-			/* 响应式 */
+			/* 导航按钮布局覆盖 - 让名字显示在按钮下方 */
+			#header nav ul {
+				display: flex;
+				justify-content: center;
+				gap: 20px;
+				flex-wrap: wrap;
+			}
+
+			#header nav li {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				height: auto !important;
+				line-height: normal !important;
+				width: auto !important;
+			}
+
+			/* 禁用状态 */
+			#header nav li a.disabled {
+				opacity: 0.3;
+				pointer-events: none;
+			}
+
+			/* 名字标签 */
+			.link-name {
+				margin-top: 10px;
+				font-size: 0.8rem;
+				font-weight: 400;
+				color: rgba(255, 255, 255, 0.9);
+				letter-spacing: 0.05em;
+				text-align: center;
+			}
+
+			/* 响应式 - 向下箭头 */
 			@media (max-width: 768px) {
 				.scroll-hint {
 					bottom: 20px;
@@ -150,7 +183,7 @@
 				}
 
 				.content-section h2 {
-					font-size: 1.5rem;
+					font-size: 1.8rem;
 				}
 
 				.content-section p {
@@ -178,7 +211,30 @@
 				}
 
 				.content-section h2 {
-					font-size: 1.3rem;
+					font-size: 1.5rem;
+				}
+			}
+
+			/* 响应式 - 导航 */
+			@media screen and (max-width: 736px) {
+				#header nav ul {
+					gap: 12px;
+				}
+
+				.link-name {
+					font-size: 0.7rem;
+					margin-top: 8px;
+				}
+			}
+
+			@media screen and (max-width: 480px) {
+				#header nav ul {
+					gap: 8px;
+				}
+
+				.link-name {
+					font-size: 0.6rem;
+					margin-top: 6px;
 				}
 			}
 
@@ -243,11 +299,22 @@
 						<p>Waves &nbsp;&bull;&nbsp; Worlds &nbsp;&bull;&nbsp; Wonder</p>
 						<nav>
 							<ul>
-								<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-								<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-								<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
-								<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-								<li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+								<li>
+									<a href="https://space.bilibili.com/511070963" target="_blank" class="icon brands fa-youtube"><span class="label">Rouri's Bilibili</span></a>
+									<span class="link-name">Rouri B站</span>
+								</li>
+								<li>
+									<a href="https://space.bilibili.com/1876827674" target="_blank" class="icon brands fa-youtube"><span class="label">Safara's Bilibili</span></a>
+									<span class="link-name">Safara B站</span>
+								</li>
+								<li>
+									<a href="https://mu142857.github.io/" target="_blank" class="icon solid fa-globe"><span class="label">Safara's Website</span></a>
+									<span class="link-name">Safara 主页</span>
+								</li>
+								<li>
+									<a href="#" class="icon solid fa-globe disabled"><span class="label">Rouri's Website</span></a>
+									<span class="link-name">Rouri 主页</span>
+								</li>
 							</ul>
 						</nav>
 					</header>
