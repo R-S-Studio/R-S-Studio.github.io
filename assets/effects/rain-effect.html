@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rain Effect Demo</title>
+    <link rel="icon" type="image/png" href="assets/css/images/favicon.png" />
     <style>
         * {
             margin: 0;
@@ -160,6 +161,19 @@
             font-weight: 400;
             color: rgba(255, 255, 255, 0.85);
             letter-spacing: 0.05em;
+        }
+
+        #header nav li:first-child a:before {
+            border-color: #ffd700 !important;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        #header nav li:first-child a:hover:before {
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+        }
+
+        #header nav li:first-child .link-name {
+            color: #ffd700;
         }
 
         /* 响应式 */
