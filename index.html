@@ -6,55 +6,241 @@
 -->
 <html>
 	<head>
-		<title>studio</title>
+		<title>R&S Studio</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		<link rel="stylesheet" href="assets/effects/rain.css" />
+		<style>
+			/* 整体页面设置 */
+			html {
+				scroll-behavior: smooth;
+			}
+
+			body {
+				overflow-x: hidden;
+				overflow-y: auto;
+			}
+
+			/* 首屏封面 */
+			.cover-section {
+				position: relative;
+				width: 100%;
+				height: 100vh;
+				min-height: 500px;
+			}
+
+			/* 背景和雨只在首屏 */
+			.cover-section #wrapper {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+
+			.cover-section .rain-container {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				pointer-events: none;
+				overflow: hidden;
+				z-index: 10;
+			}
+
+			/* 向下箭头 */
+			.scroll-hint {
+				position: absolute;
+				bottom: 30px;
+				left: 50%;
+				transform: translateX(-50%);
+				z-index: 100;
+				text-align: center;
+				cursor: pointer;
+				opacity: 0.6;
+				transition: opacity 0.3s ease;
+			}
+
+			.scroll-hint:hover {
+				opacity: 1;
+			}
+
+			.scroll-hint span {
+				display: block;
+				color: rgba(255, 255, 255, 0.7);
+				font-size: 0.75rem;
+				letter-spacing: 0.2rem;
+				text-transform: uppercase;
+				margin-bottom: 8px;
+				font-family: inherit;
+			}
+
+			.scroll-hint .arrow {
+				display: block;
+				width: 20px;
+				height: 20px;
+				margin: 0 auto;
+				border-right: 1px solid rgba(255, 255, 255, 0.5);
+				border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+				transform: rotate(45deg);
+				animation: arrow-bounce 2s ease-in-out infinite;
+			}
+
+			@keyframes arrow-bounce {
+				0%, 100% {
+					transform: rotate(45deg) translate(0, 0);
+					opacity: 0.5;
+				}
+				50% {
+					transform: rotate(45deg) translate(5px, 5px);
+					opacity: 1;
+				}
+			}
+
+			/* 第二屏内容区 */
+			.content-section {
+				position: relative;
+				width: 100%;
+				min-height: 100vh;
+				background: #0a0a0a;
+				z-index: 50;
+			}
+
+			.content-inner {
+				max-width: 1000px;
+				margin: 0 auto;
+				padding: 80px 40px;
+			}
+
+			.content-section h2 {
+				color: #ffffff;
+				font-size: 2rem;
+				font-weight: 300;
+				margin-bottom: 1.5rem;
+				letter-spacing: 0.1rem;
+			}
+
+			.content-section p {
+				color: rgba(255, 255, 255, 0.6);
+				font-size: 1rem;
+				line-height: 1.8;
+				margin-bottom: 1.5rem;
+			}
+
+			/* 响应式 */
+			@media (max-width: 768px) {
+				.scroll-hint {
+					bottom: 20px;
+				}
+
+				.scroll-hint span {
+					font-size: 0.65rem;
+				}
+
+				.scroll-hint .arrow {
+					width: 16px;
+					height: 16px;
+				}
+
+				.content-inner {
+					padding: 60px 25px;
+				}
+
+				.content-section h2 {
+					font-size: 1.5rem;
+				}
+
+				.content-section p {
+					font-size: 0.9rem;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.scroll-hint {
+					bottom: 15px;
+				}
+
+				.scroll-hint span {
+					font-size: 0.6rem;
+					letter-spacing: 0.15rem;
+				}
+
+				.scroll-hint .arrow {
+					width: 14px;
+					height: 14px;
+				}
+
+				.content-inner {
+					padding: 50px 20px;
+				}
+
+				.content-section h2 {
+					font-size: 1.3rem;
+				}
+			}
+
+			/* 减少动画偏好 */
+			@media (prefers-reduced-motion: reduce) {
+				html {
+					scroll-behavior: auto;
+				}
+
+				.scroll-hint .arrow {
+					animation: none;
+					opacity: 0.7;
+				}
+			}
+		</style>
 	</head>
 	<body class="is-preload">
-		<div class="rain-container">
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-			<div class="rain-line"></div>
-		</div>
-		<div id="wrapper">
-			<div id="bg"></div>
-			<div id="overlay"></div>
-			<div id="main">
 
-				<!-- Header -->
+		<!-- 首屏封面 -->
+		<section class="cover-section">
+			<div class="rain-container">
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+				<div class="rain-line"></div>
+			</div>
+
+			<div id="wrapper">
+				<div id="bg"></div>
+				<div id="overlay"></div>
+				<div id="main">
+
+					<!-- Header -->
 					<header id="header">
-						<h1>Music Studio</h1>
-						<p>第一点 &nbsp;&bull;&nbsp; 第二点 &nbsp;&bull;&nbsp; 其它</p>
+						<h1>R&S Studio</h1>
+						<p>Waves &nbsp;&bull;&nbsp; Worlds &nbsp;&bull;&nbsp; Wonder</p>
 						<nav>
 							<ul>
 								<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
@@ -66,17 +252,36 @@
 						</nav>
 					</header>
 
-				<!-- Footer -->
+					<!-- Footer -->
 					<footer id="footer">
 						<span class="copyright"> </span>
 					</footer>
 
+				</div>
 			</div>
-		</div>
+
+			<!-- 向下箭头 -->
+			<a href="#content" class="scroll-hint">
+				<span>Explore</span>
+				<div class="arrow"></div>
+			</a>
+		</section>
+
+		<!-- 第二屏内容 -->
+		<section id="content" class="content-section">
+			<div class="content-inner">
+				<h2>About Us</h2>
+				<p>
+					这里放你们工作室的介绍内容。可以写你们是谁、做什么、合作过哪些项目等等。
+				</p>
+				<p>
+					后续可以继续往下加更多区块：作品展示、联系方式、合作流程等。
+				</p>
+			</div>
+		</section>
+
 		<script>
 			window.onload = function() { document.body.classList.remove('is-preload'); }
-			window.ontouchmove = function() { return false; }
-			window.onorientationchange = function() { document.body.scrollTop = 0; }
 		</script>
 	</body>
 </html>
