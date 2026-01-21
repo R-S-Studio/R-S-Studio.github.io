@@ -6,30 +6,38 @@
 -->
 <html>
 	<head>
-		<title>R&S</title>
+		<title>R&S Studio</title>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<!-- 引入更现代的字体 Inter -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		<link rel="stylesheet" href="assets/effects/rain.css" />
 		<link rel="icon" type="image/png" href="assets/css/images/favicon.png" />
 		<style>
-			/* --- 全局字体与基础设置 --- */
-			html { scroll-behavior: smooth; }
+			/* --- Global Settings --- */
+			html { scroll-behavior: smooth; background-color: #070a11; }
 			body { 
 				overflow-x: hidden; 
 				overflow-y: auto; 
-				font-family: 'Inter', sans-serif !important; /* 强制全站更换字体 */
+				font-family: 'Inter', sans-serif !important;
+				background-color: #070a11;
+				-webkit-font-smoothing: antialiased;
 			}
 
-			/* --- 第一屏：封面 --- */
+			/* --- Hardware Acceleration (Anti-Lag) --- */
+			#bg, #overlay, .rain-line, .work-image-wrapper {
+				will-change: transform, opacity;
+				transform: translateZ(0);
+			}
+
+			/* --- Cover Section --- */
 			.cover-section {
 				position: relative;
 				width: 100%;
 				height: 100vh;
 				min-height: 500px;
+				background-color: #070a11;
 			}
 			.cover-section #wrapper {
 				position: absolute;
@@ -41,7 +49,7 @@
 				pointer-events: none; overflow: hidden; z-index: 10;
 			}
 
-			/* --- 导航按钮与特效 --- */
+			/* --- Navigation --- */
 			#header nav ul { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
 			#header nav li { display: flex; flex-direction: column; align-items: center; height: auto !important; line-height: normal !important; width: auto !important; }
 			.link-name { margin-top: 10px; font-size: 0.8rem; font-weight: 400; color: rgba(255, 255, 255, 0.9); letter-spacing: 0.05em; text-align: center; }
@@ -49,202 +57,84 @@
 			#header nav li:first-child a:hover:before { box-shadow: 0 0 25px rgba(255, 215, 0, 0.7); }
 			#header nav li a.disabled { opacity: 0.3; pointer-events: none; }
 
-			/* --- 向下箭头 --- */
+			/* --- Scroll Hint --- */
 			.scroll-hint { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 100; text-align: center; cursor: pointer; opacity: 0.6; transition: opacity 0.3s ease; border: none; }
-			.scroll-hint:hover { opacity: 1; }
 			.scroll-hint span { display: block; color: rgba(255, 255, 255, 0.7); font-size: 0.75rem; letter-spacing: 0.2rem; text-transform: uppercase; margin-bottom: 8px; }
 			.scroll-hint .arrow { display: block; width: 20px; height: 20px; margin: 0 auto; border-right: 1px solid rgba(255, 255, 255, 0.5); border-bottom: 1px solid rgba(255, 255, 255, 0.5); transform: rotate(45deg); animation: arrow-bounce 2s ease-in-out infinite; }
 			@keyframes arrow-bounce { 0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.5; } 50% { transform: rotate(45deg) translate(5px, 5px); opacity: 1; } }
 
-			/* --- 第二屏：About Us --- */
+			/* --- About Us --- */
 			.content-section {
 				position: relative;
 				width: 100%;
 				min-height: 100vh;
-				background: radial-gradient(circle at 50% 50%, #323232 0%, #151515 100%);
+				background: radial-gradient(circle at 50% 50%, #161a24 0%, #070a11 100%);
 				z-index: 50;
 				overflow: hidden;
 			}
-
 			.content-section::before {
 				content: "";
 				position: absolute;
 				top: 0; left: 0; width: 100%; height: 100%;
-				background-image: 
-					linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-					linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+				background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
 				background-size: 40px 40px;
 				pointer-events: none;
 			}
-
 			.glow-blue {
 				position: absolute; top: 10%; right: -5%; width: 500px; height: 500px;
 				background: radial-gradient(circle, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
-				filter: blur(80px); z-index: -1;
+				filter: blur(40px); z-index: -1;
 			}
 			.glow-pink {
 				position: absolute; bottom: 10%; left: -5%; width: 500px; height: 500px;
 				background: radial-gradient(circle, rgba(255, 0, 150, 0.04) 0%, transparent 70%);
-				filter: blur(80px); z-index: -1;
+				filter: blur(40px); z-index: -1;
 			}
-
-			.content-inner {
-				max-width: 1100px;
-				margin: 0 auto;
-				padding: 80px 40px; /* 调整内边距，减少空旷感 */
-			}
-
-			.about-container {
-				display: flex;
-				align-items: center;
-				gap: 60px;
-			}
-
+			.content-inner { max-width: 1100px; margin: 0 auto; padding: 100px 40px; }
+			.about-container { display: flex; align-items: center; gap: 60px; }
 			.about-text { flex: 1.2; }
+			.content-section h2 { color: #ffffff; font-size: 2.8rem; font-weight: 800; margin-bottom: 1.8rem; }
+			.content-section p { color: rgba(255, 255, 255, 0.7); font-size: 1rem; line-height: 1.75; margin-bottom: 1.2rem; }
+			.about-image { flex: 0 0 40%; max-width: 480px; }
+			.about-image img { width: 100%; height: auto; border: 6px solid #ffffff; border-radius: 4px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); display: block; }
 
-			.content-section h2 {
-				color: #ffffff;
-				font-size: 2.8rem;
-				font-weight: 800;
-				margin-bottom: 1.8rem;
-				letter-spacing: -0.02em;
-			}
-
-			.content-section p {
-				color: rgba(255, 255, 255, 0.7);
-				font-size: 1rem;
-				line-height: 1.75;
-				margin-bottom: 1.2rem;
-			}
-
-			.about-image {
-				flex: 0 0 40%;
-				max-width: 480px;
-			}
-			.about-image img {
-				width: 100%;
-				height: auto;
-				border: 6px solid #ffffff;
-				border-radius: 4px;
-				box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-				display: block;
-			}
-
-			/* --- 第三屏：Works 展示区 --- */
-			.works-section {
-				position: relative;
-				width: 100%;
-				padding: 80px 40px 120px 40px; /* 增加底部边距，让页面结束得更自然 */
-				background: #111111;
-				z-index: 50;
-			}
-
-			.works-title-container {
-				text-align: center;
-				margin-bottom: 60px;
-			}
-
-			.works-section h2.big-title {
-				font-size: 2.2rem;
-				font-weight: 800;
-				text-transform: uppercase;
-				letter-spacing: 0.2rem;
-				color: #ffffff;
-				display: inline-block;
-				border-bottom: 2px solid rgba(255,255,255,0.1);
-				padding-bottom: 10px;
-			}
-
-			.works-grid {
-				display: grid;
-				grid-template-columns: repeat(2, 1fr);
-				gap: 50px 40px;
-				max-width: 1100px;
-				margin: 0 auto;
-				position: relative;
-				z-index: 5;
-			}
-
-			.work-card {
-				display: block;
-				text-decoration: none;
-			}
-
-			.work-image-wrapper {
-				position: relative;
-				border: 6px solid #ffffff;
-				border-radius: 2px;
-				overflow: hidden;
-				aspect-ratio: 16 / 9;
-				background: #000;
-				transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-			}
-
-			.work-image-wrapper img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				transition: transform 0.6s ease;
-			}
-
-			.work-overlay {
-				position: absolute;
-				top: 0; left: 0; width: 100%; height: 100%;
-				background: rgba(0, 0, 0, 0.4);
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				opacity: 0;
-				transition: opacity 0.3s ease;
-			}
-
+			/* --- Selected Works --- */
+			.works-section { position: relative; width: 100%; padding: 100px 40px 120px 40px; background: #070a11; z-index: 50; }
+			.works-title-container { text-align: center; margin-bottom: 60px; }
+			.works-section h2.big-title { font-size: 2.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2rem; color: #ffffff; display: inline-block; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+			.works-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 50px 40px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 5; }
+			.work-card { display: block; text-decoration: none; }
+			.work-image-wrapper { position: relative; border: 6px solid #ffffff; border-radius: 2px; overflow: hidden; aspect-ratio: 16 / 9; background: #000; transition: all 0.4s ease; }
+			.work-image-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+			.work-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
 			.work-overlay i { color: #fff; font-size: 3rem; }
-
-			.work-card:hover .work-image-wrapper {
-				transform: translateY(-8px);
-				box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-			}
-
+			.work-card:hover .work-image-wrapper { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
 			.work-card:hover .work-overlay { opacity: 1; }
 			.work-card:hover .work-image-wrapper img { transform: scale(1.08); }
+			.work-info { margin-top: 18px; padding-left: 15px; border-left: 1px solid rgba(255,255,255,0.1); }
+			.work-info h3 { color: #fff; font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; }
+			.work-info p { color: rgba(255,255,255,0.4); font-size: 0.8rem; margin: 0; text-transform: uppercase; }
 
-			.work-info {
-				margin-top: 18px;
-				padding-left: 15px;
-				border-left: 1px solid rgba(255,255,255,0.1);
-			}
-
-			.work-info h3 {
-				color: #fff;
-				font-size: 1.15rem;
-				font-weight: 700;
-				margin-bottom: 6px;
-			}
-
-			.work-info p {
-				color: rgba(255,255,255,0.4);
-				font-size: 0.8rem;
-				margin: 0;
-				text-transform: uppercase;
-				letter-spacing: 0.05em;
-			}
-
-			/* --- 响应式设计 --- */
-			@media screen and (max-width: 980px) {
+			/* --- Mobile Stability Optimization --- */
+			@media screen and (max-width: 736px) {
+				#bg, #overlay { 
+					position: absolute !important; /* Fix jump by disabling fixed on mobile */
+					height: 100% !important;
+					background-attachment: scroll !important;
+				}
 				.about-container { flex-direction: column-reverse; text-align: center; gap: 40px; }
-				.about-image { flex: 0 0 auto; width: 100%; max-width: 400px; margin: 0 auto; }
+				.about-image { flex: 0 0 auto; width: 100%; max-width: 380px; margin: 0 auto; }
 				.works-grid { grid-template-columns: 1fr; }
-				.content-section h2, .works-section h2.big-title { font-size: 2rem; }
+				.content-section h2, .works-section h2.big-title { font-size: 1.8rem; }
+				.glow-blue, .glow-pink { display: none; } /* Remove blur for performance */
 			}
 		</style>
 	</head>
 	<body class="is-preload">
 
-		<!-- 第一屏：封面 -->
 		<section class="cover-section">
 			<div class="rain-container">
-				<div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div>
-				<div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div>
+				<!-- Rain lines -->
 				<div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div>
 				<div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div>
 				<div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div><div class="rain-line"></div>
@@ -259,22 +149,10 @@
 						<p>Waves &nbsp;&bull;&nbsp; Worlds &nbsp;&bull;&nbsp; Wonder</p>
 						<nav>
 							<ul>
-								<li>
-									<a href="https://space.bilibili.com/511070963" target="_blank" class="icon brands fa-youtube"><span class="label">Rouri's Bilibili</span></a>
-									<span class="link-name">Rouri Bilibili</span>
-								</li>
-								<li>
-									<a href="https://space.bilibili.com/1876827674" target="_blank" class="icon brands fa-youtube"><span class="label">Safara's Bilibili</span></a>
-									<span class="link-name">Safara Bilibili</span>
-								</li>
-								<li>
-									<a href="https://mu142857.github.io/" target="_blank" class="icon solid fa-globe"><span class="label">Safara's Website</span></a>
-									<span class="link-name">Safara Website</span>
-								</li>
-								<li>
-									<a href="#" class="icon solid fa-globe disabled"><span class="label">Rouri's Website</span></a>
-									<span class="link-name">Rouri Website</span>
-								</li>
+								<li><a href="https://space.bilibili.com/511070963" target="_blank" class="icon brands fa-youtube"></a><span class="link-name">Rouri Bilibili</span></li>
+								<li><a href="https://space.bilibili.com/1876827674" target="_blank" class="icon brands fa-youtube"></a><span class="link-name">Safara Bilibili</span></li>
+								<li><a href="https://mu142857.github.io/" target="_blank" class="icon solid fa-globe"></a><span class="link-name">Safara Website</span></li>
+								<li><a href="#" class="icon solid fa-globe disabled"></a><span class="link-name">Rouri Website</span></li>
 							</ul>
 						</nav>
 					</header>
@@ -287,7 +165,6 @@
 			</a>
 		</section>
 
-		<!-- 第二屏：About Us -->
 		<section id="content" class="content-section">
 			<div class="glow-blue"></div>
 			<div class="glow-pink"></div>
@@ -315,67 +192,53 @@
 			</div>
 		</section>
 
-		<!-- 第三屏：作品展示 -->
 		<section id="works" class="works-section">
 			<div class="content-inner">
 				<div class="works-title-container">
 					<h2 class="big-title">Selected Works</h2>
 				</div>
-				
 				<div class="works-grid">
-					<!-- 作品 1：Rouri -->
 					<a href="https://www.bilibili.com/video/BV17w411n7N8" target="_blank" class="work-card">
 						<div class="work-image-wrapper">
 							<img src="assets/css/images/music1.png" alt="Yandere Beat">
 							<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
 						</div>
-						<div class="work-info">
-							<h3>Yandere x Emotional x Piano type beat</h3>
-							<p>Produced by Rouri</p>
-						</div>
+						<div class="work-info"><h3>Yandere x Emotional x Piano type beat</h3><p>Produced by Rouri</p></div>
 					</a>
-
-					<!-- 作品 2：R&S Studio -->
 					<a href="https://www.bilibili.com/video/BV124kTBKEE5" target="_blank" class="work-card">
 						<div class="work-image-wrapper">
 							<img src="assets/css/images/music2.png" alt="EMO Beat">
 							<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
 						</div>
-						<div class="work-info">
-							<h3>EMO (emotional) x anime/manga x type beat</h3>
-							<p>Produced by R&S Studio</p>
-						</div>
+						<div class="work-info"><h3>EMO (emotional) x anime/manga x type beat</h3><p>Produced by R&S Studio</p></div>
 					</a>
-
-					<!-- 作品 3：Safara (After Prom) -->
 					<a href="https://www.youtube.com/watch?v=bvWkO30kiZc" target="_blank" class="work-card">
 						<div class="work-image-wrapper">
 							<img src="assets/css/images/music3.png" alt="After Prom">
 							<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
 						</div>
-						<div class="work-info">
-							<h3>After Prom (Emotional Piano & Strings)</h3>
-							<p>Composed by Safara</p>
-						</div>
+						<div class="work-info"><h3>After Prom (Emotional Piano & Strings)</h3><p>Composed by Safara</p></div>
 					</a>
-
-					<!-- 作品 4：Rouri -->
 					<a href="https://www.bilibili.com/video/BV1si4y1z7NZ" target="_blank" class="work-card">
 						<div class="work-image-wrapper">
 							<img src="assets/css/images/music4.png" alt="Hyperpop Beat">
 							<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
 						</div>
-						<div class="work-info">
-							<h3>Hyperpop x Emotion x Piano type beat</h3>
-							<p>Produced by Rouri</p>
-						</div>
+						<div class="work-info"><h3>Hyperpop x Emotion x Piano type beat</h3><p>Produced by Rouri</p></div>
 					</a>
 				</div>
 			</div>
 		</section>
 
 		<script>
-			window.onload = function() { document.body.classList.remove('is-preload'); }
+			window.onload = function() { 
+				document.body.classList.remove('is-preload'); 
+				// Limit rain for mobile
+				if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+					const lines = document.querySelectorAll('.rain-line');
+					for (let i = 8; i < lines.length; i++) lines[i].style.display = 'none';
+				}
+			}
 		</script>
 	</body>
 </html>

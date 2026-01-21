@@ -362,6 +362,10 @@ input, select, textarea {
 		position: fixed;
 		top: 0;
 		width: 100%;
+
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
+		will-change: transform, opacity;
 	}
 
 /* Main */
@@ -1078,4 +1082,25 @@ input, select, textarea {
 
 		#header nav {
 			padding: 0 1em;
-		} }
+		} 
+
+		/* 手术 5：手机端稳定性补丁 */
+		@media screen and (max-width: 736px) {
+			/* 解决 Overlay 在手机端消失的问题 */
+			#bg, #overlay {
+				position: absolute !important; /* 在手机端放弃 fixed，改用 absolute 随屏滚动 */
+				height: 100vh !important;
+				background-attachment: scroll, scroll !important; /* 彻底禁用会导致跳动的 fixed 附件 */
+			}
+			
+			/* 解决快速刷动时的重绘压力 */
+			#main, #header {
+				-webkit-transform: translateZ(0);
+				transform: translateZ(0);
+			}
+
+			/* 统一手机端所有背景色 */
+			html, body {
+				background-color: #070a11 !important;
+			}
+		}}
