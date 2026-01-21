@@ -149,6 +149,107 @@
 				html { scroll-behavior: auto; }
 				.scroll-hint .arrow { animation: none; opacity: 0.7; }
 			}
+						
+			/* --- 第三屏：Works 展示区 --- */
+			.works-section {
+				position: relative;
+				width: 100%;
+				padding: 80px 40px;
+				background: #1a1a1a; /* 稍深的背景色，产生切分感 */
+				z-index: 50;
+			}
+
+			.works-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr); /* 默认两列并排 */
+				gap: 40px;
+				max-width: 1100px;
+				margin: 0 auto;
+			}
+
+			.work-card {
+				display: block;
+				text-decoration: none;
+				transition: all 0.3s ease;
+			}
+
+			.work-image-wrapper {
+				position: relative;
+				border: 8px solid #ffffff; /* 延续白色相框风格 */
+				border-radius: 4px;
+				overflow: hidden;
+				aspect-ratio: 16 / 9; /* 锁定 16:9 比例 */
+				background: #000;
+			}
+
+			.work-image-wrapper img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				transition: transform 0.5s ease, opacity 0.3s ease;
+			}
+
+			/* 悬停时的遮罩层 */
+			.work-overlay {
+				position: absolute;
+				top: 0; left: 0; width: 100%; height: 100%;
+				background: rgba(0, 0, 0, 0.4);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				opacity: 0;
+				transition: opacity 0.3s ease;
+			}
+
+			.work-overlay i {
+				color: #ffffff;
+				font-size: 3rem;
+				filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+			}
+
+			/* 悬停交互效果 */
+			.work-card:hover .work-image-wrapper img {
+				transform: scale(1.1);
+				opacity: 0.7;
+			}
+
+			.work-card:hover .work-overlay {
+				opacity: 1;
+			}
+
+			.work-card:hover .work-image-wrapper {
+				box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+				transform: translateY(-5px);
+			}
+
+			.work-info {
+				margin-top: 15px;
+				text-align: left;
+			}
+
+			.work-info h3 {
+				color: #fff;
+				font-size: 1.2rem;
+				margin-bottom: 5px;
+				font-weight: 600;
+			}
+
+			.work-info p {
+				color: rgba(255,255,255,0.5);
+				font-size: 0.9rem;
+				margin: 0;
+			}
+
+			/* --- 作品集响应式调整 --- */
+			@media screen and (max-width: 840px) {
+				.works-grid {
+					grid-template-columns: 1fr; /* 手机端变为一列 */
+					gap: 30px;
+				}
+				.works-section {
+					padding: 60px 20px;
+				}
+			}
 		</style>
 	</head>
 	<body class="is-preload">
@@ -229,6 +330,71 @@
 					<div class="about-image">
 						<img src="assets/css/images/R&S.png" alt="R&S Studio">
 					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- 第三屏：作品展示 (Selected Works) -->
+		<section id="works" class="works-section">
+			<div class="content-inner">
+				<h2 style="text-align: center; margin-bottom: 50px; background: linear-gradient(to right, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Selected Works</h2>
+				
+				<div class="works-grid">
+					<!-- 作品 1：Rouri 作品 -->
+					<a href="https://www.bilibili.com/video/BV17w411n7N8" target="_blank" class="work-card">
+						<div class="work-image-wrapper">
+							<img src="assets/css/images/music1.png" alt="Yandere Beat">
+							<div class="work-overlay">
+								<i class="icon brands fa-youtube"></i>
+							</div>
+						</div>
+						<div class="work-info">
+							<h3>Yandere x Emotional x Piano type beat</h3>
+							<p>Produced by Rouri</p>
+						</div>
+					</a>
+
+					<!-- 作品 2：两人合作 -->
+					<a href="https://www.bilibili.com/video/BV124kTBKEE5" target="_blank" class="work-card">
+						<div class="work-image-wrapper">
+							<img src="assets/css/images/music2.png" alt="EMO Beat">
+							<div class="work-overlay">
+								<i class="icon brands fa-youtube"></i>
+							</div>
+						</div>
+						<div class="work-info">
+							<h3>EMO (emotional) x anime/manga x type beat</h3>
+							<p>Produced by R&S Studio</p>
+						</div>
+					</a>
+
+					<!-- 作品 3：Safara 个人作品 (After Prom) -->
+					<a href="#" target="_blank" class="work-card"> <!-- 请在此处填入油管链接 -->
+						<div class="work-image-wrapper">
+							<img src="assets/css/images/music3.png" alt="After Prom">
+							<div class="work-overlay">
+								<i class="icon brands fa-youtube"></i>
+							</div>
+						</div>
+						<div class="work-info">
+							<h3>After Prom (Emotional Piano & Strings)</h3>
+							<p>Composed by Safara</p>
+						</div>
+					</a>
+
+					<!-- 作品 4：Rouri 作品 -->
+					<a href="https://www.bilibili.com/video/BV1si4y1z7NZ" target="_blank" class="work-card">
+						<div class="work-image-wrapper">
+							<img src="assets/css/images/music4.png" alt="Hyperpop Beat">
+							<div class="work-overlay">
+								<i class="icon brands fa-youtube"></i>
+							</div>
+						</div>
+						<div class="work-info">
+							<h3>Hyperpop x Emotion x Piano type beat</h3>
+							<p>Produced by Rouri</p>
+						</div>
+					</a>
 				</div>
 			</div>
 		</section>
