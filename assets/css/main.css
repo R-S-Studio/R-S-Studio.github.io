@@ -1086,13 +1086,20 @@ input, select, textarea {
 
 		/* 手术 5：手机端稳定性补丁 */
 		@media screen and (max-width: 736px) {
+			/* 防止水平溢出 */
+			html, body {
+				overflow-x: hidden !important;
+				max-width: 100vw !important;
+			}
+
 			/* 解决 Overlay 在手机端消失的问题 */
 			#bg, #overlay {
 				position: absolute !important; /* 在手机端放弃 fixed，改用 absolute 随屏滚动 */
 				height: 100vh !important;
+				max-width: 100vw !important;
 				background-attachment: scroll, scroll !important; /* 彻底禁用会导致跳动的 fixed 附件 */
 			}
-			
+
 			/* 解决快速刷动时的重绘压力 */
 			#main, #header {
 				-webkit-transform: translateZ(0);

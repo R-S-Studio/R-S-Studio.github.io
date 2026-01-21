@@ -73,6 +73,11 @@
 
 /* 响应式 */
 @media (max-width: 768px) {
+    .rain-container {
+        position: absolute !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+    }
     .rain-line:nth-child(n+16) {
         display: none;
     }
@@ -82,6 +87,11 @@
 }
 
 @media (max-width: 480px) {
+    .rain-container {
+        position: absolute !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+    }
     .rain-line:nth-child(n+11) {
         display: none;
     }
