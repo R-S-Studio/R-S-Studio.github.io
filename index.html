@@ -139,11 +139,31 @@
 			.work-info p { color: rgba(255,255,255,0.4); font-size: 0.8rem; margin: 0; text-transform: uppercase; }
 
 			/* --- Mobile Optimization --- */
-			@media screen and (max-width: 736px) {
+			@media screen and (max-width: 1024px) {
+				/* 1. 彻底删除雨滴，解决半屏 Bug */
+				.rain-container { 
+					display: none !important; 
+				}
+
+				/* 2. 恢复并锁定背景滚动 (750px 完美循环逻辑) */
+				#bg {
+					position: absolute !important;
+					top: 0 !important;
+					left: 0 !important;
+					height: 100% !important;
+					/* 使用你最满意的 750px 无缝循环数值 */
+					background-size: 750px auto !important;
+					width: 2250px !important; 
+					background-attachment: scroll !important;
+					/* 强制启动动画 */
+					animation: bg 60s linear infinite !important; 
+				}
+
+				/* 3. 其他稳定性修复 */
 				html, body {
 					overflow-x: hidden !important;
 				}
-				#bg, #overlay {
+				#overlay {
 					position: absolute !important;
 					height: 100% !important;
 					background-attachment: scroll !important;
@@ -154,6 +174,7 @@
 				.content-section h2, .works-section h2.big-title { font-size: 1.8rem; }
 				.glow-blue, .glow-pink { display: none; }
 			}
+
 		</style>
 	</head>
 	<body class="is-preload">
@@ -177,10 +198,10 @@
 						<p>Waves &nbsp;&bull;&nbsp; Worlds &nbsp;&bull;&nbsp; Wonder</p>
 						<nav>
 							<ul>
-								<li><a href="https://space.bilibili.com/511070963" target="_blank" class="icon brands fa-youtube"></a><span class="link-name">Rouri Bilibili</span></li>
-								<li><a href="https://space.bilibili.com/1876827674" target="_blank" class="icon brands fa-youtube"></a><span class="link-name">Safara Bilibili</span></li>
-								<li><a href="https://mu142857.github.io/" target="_blank" class="icon solid fa-globe"></a><span class="link-name">Safara Website</span></li>
-								<li><a href="#" class="icon solid fa-globe disabled"></a><span class="link-name">Rouri Website</span></li>
+								<li><a href="https://space.bilibili.com/511070963" target="_blank" class="icon brands fa-youtube"></a><span class="link-name">Rouri Space</span></li>
+								<li><a href="https://space.bilibili.com/1876827674" target="_blank" class="icon brands fa-youtube"></a><span class="link-name">Safara Space</span></li>
+								<li><a href="https://mu142857.github.io/" target="_blank" class="icon solid fa-globe"></a><span class="link-name">Safara Web</span></li>
+								<li><a href="#" class="icon solid fa-globe disabled"></a><span class="link-name">Rouri Web</span></li>
 							</ul>
 						</nav>
 					</header>
