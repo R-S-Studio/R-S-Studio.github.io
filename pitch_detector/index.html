@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pitch Detector</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --panel: #111118;
+    --border: #1e1e2e;
+    --accent: #00ffc8;
+    --accent2: #ff6b6b;
+    --accent3: #6b8aff;
+    --text: #e8e8f0;
+    --muted: #555570;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,255,200,0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(107,138,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .main-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 520px;
+    position: relative;
+  }
+
+  /* Big pitch display */
+  .pitch-display {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .note-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(5rem, 18vw, 9rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+    text-shadow: 0 0 40px rgba(0,255,200,0.3);
+    transition: color 0.1s, text-shadow 0.1s;
+    letter-spacing: -0.02em;
+  }
+
+  .note-name.silent { color: var(--muted); text-shadow: none; }
+
+  .freq-display {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 0.1em;
+    height: 1.2em;
+  }
+
+  /* Meter */
+  .cents-section { margin-bottom: 28px; }
+
+  .cents-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .cents-bar-wrap {
+    position: relative;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: visible;
+  }
+
+  .cents-bar-wrap::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -4px;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 16px;
+    background: var(--muted);
+    border-radius: 1px;
+  }
+
+  .cents-fill {
+    position: absolute;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    top: 0;
+    transition: left 0.08s, width 0.08s, background 0.2s;
+  }
+
+  .cents-value {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  /* Canvas visualizer */
+  .viz-section { margin-bottom: 28px; }
+
+  canvas {
+    width: 100%;
+    height: 80px;
+    border-radius: 8px;
+    background: var(--bg);
+    display: block;
+  }
+
+  /* Info grid */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .info-cell {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+
+  .info-cell .label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .info-cell .value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* Button */
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  }
+
+  .btn:hover {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 24px rgba(0,255,200,0.3);
+  }
+
+  .btn.active {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    color: white;
+    box-shadow: 0 0 24px rgba(255,107,107,0.3);
+  }
+
+  .btn.active:hover {
+    opacity: 0.85;
+  }
+
+  /* History */
+  .history {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 32px;
+  }
+
+  .history-tag {
+    background: var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+  /* API code block */
+  .api-section {
+    margin-top: 24px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .api-section h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  pre {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 0.72rem;
+    line-height: 1.7;
+    color: #aaa;
+    border: 1px solid var(--border);
+  }
+
+  .kw { color: var(--accent3); }
+  .fn { color: var(--accent); }
+  .str { color: #ffb347; }
+  .cm { color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+
+<h1>PITCH <span>DETECTOR</span></h1>
+
+<div class="main-card">
+  <div class="pitch-display">
+    <div class="note-name silent" id="noteName">—</div>
+    <div class="freq-display" id="freqDisplay"></div>
+  </div>
+
+  <div class="cents-section">
+    <div class="cents-label">Tuning</div>
+    <div class="cents-bar-wrap">
+      <div class="cents-fill" id="centsFill" style="left:50%;width:0"></div>
+    </div>
+    <div class="cents-value" id="centsValue">± 0 cents</div>
+  </div>
+
+  <div class="viz-section">
+    <canvas id="vizCanvas"></canvas>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-cell">
+      <div class="label">Octave</div>
+      <div class="value" id="octaveVal">—</div>
+    </div>
+    <div class="info-cell">
+      <div class="label">MIDI Note</div>
+      <div class="value" id="midiVal">—</div>
+    </div>
+    <div class="info-cell">
+      <div class="label">Clarity</div>
+      <div class="value" id="clarityVal">—</div>
+    </div>
+    <div class="info-cell">
+      <div class="label">Semitone</div>
+      <div class="value" id="semitoneVal">—</div>
+    </div>
+  </div>
+
+  <button class="btn" id="toggleBtn" onclick="toggleMic()">▶ Start Listening</button>
+
+  <div class="history" id="history"></div>
+</div>
+
+<div class="api-section">
+  <h2>JS API Usage</h2>
+  <pre><span class="cm">// 初始化检测器</span>
+<span class="kw">const</span> detector = <span class="kw">new</span> <span class="fn">PitchDetector</span>();
+
+<span class="cm">// 开始麦克风监听</span>
+<span class="kw">await</span> detector.<span class="fn">start</span>();
+
+<span class="cm">// 实时获取音高数据</span>
+detector.onPitch = (result) => {
+  console.log(result.note);     <span class="cm">// "A4"</span>
+  console.log(result.freq);     <span class="cm">// 440.0</span>
+  console.log(result.midi);     <span class="cm">// 69</span>
+  console.log(result.cents);    <span class="cm">// +5 (偏差音分)</span>
+  console.log(result.clarity);  <span class="cm">// 0.95</span>
+};
+
+<span class="cm">// 单次采样</span>
+<span class="kw">const</span> result = <span class="kw">await</span> detector.<span class="fn">sample</span>();
+console.log(result.note); <span class="cm">// "C3"</span>
+
+<span class="cm">// 停止</span>
+detector.<span class="fn">stop</span>();</pre>
+</div>
+
+<script>
+// ============================================================
+// PitchDetector — 可复用的音高检测类（麦克风输入）
+// ============================================================
+class PitchDetector {
+  constructor({ fftSize = 2048, minFreq = 60, maxFreq = 1400, clarityThreshold = 0.85 } = {}) {
+    this.fftSize = fftSize;
+    this.minFreq = minFreq;
+    this.maxFreq = maxFreq;
+    this.clarityThreshold = clarityThreshold;
+    this.audioCtx = null;
+    this.analyser = null;
+    this.source = null;
+    this.stream = null;
+    this.running = false;
+    this.onPitch = null;  // callback(result)
+    this._rafId = null;
+    this._buf = new Float32Array(fftSize);
+  }
+
+  // 开始监听麦克风
+  async start() {
+    if (this.running) return;
+    this.stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    this.analyser = this.audioCtx.createAnalyser();
+    this.analyser.fftSize = this.fftSize;
+    this.source = this.audioCtx.createMediaStreamSource(this.stream);
+    this.source.connect(this.analyser);
+    this.running = true;
+    this._loop();
+  }
+
+  // 停止
+  stop() {
+    this.running = false;
+    if (this._rafId) cancelAnimationFrame(this._rafId);
+    if (this.source) this.source.disconnect();
+    if (this.stream) this.stream.getTracks().forEach(t => t.stop());
+    if (this.audioCtx) this.audioCtx.close();
+    this.source = this.stream = this.audioCtx = this.analyser = null;
+  }
+
+  // 单次采样（Promise）
+  sample() {
+    return new Promise((resolve) => {
+      const prev = this.onPitch;
+      this.onPitch = (r) => {
+        this.onPitch = prev;
+        resolve(r);
+      };
+    });
+  }
+
+  // 获取原始时域数据（供可视化用）
+  getTimeDomainData() {
+    if (!this.analyser) return new Float32Array(this.fftSize);
+    this.analyser.getFloatTimeDomainData(this._buf);
+    return this._buf;
+  }
+
+  // 内部循环
+  _loop() {
+    if (!this.running) return;
+    this._rafId = requestAnimationFrame(() => this._loop());
+    this.analyser.getFloatTimeDomainData(this._buf);
+    const result = this._detect(this._buf, this.audioCtx.sampleRate);
+    if (result && this.onPitch) this.onPitch(result);
+  }
+
+  // 核心算法：ACF2+ (Autocorrelation)
+  _detect(buf, sampleRate) {
+    const SIZE = buf.length;
+    // RMS 音量检测，过低则静音
+    let rms = 0;
+    for (let i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
+    rms = Math.sqrt(rms / SIZE);
+    if (rms < 0.01) return null;
+
+    // 自相关
+    const corr = new Float32Array(SIZE);
+    for (let lag = 0; lag < SIZE; lag++) {
+      let sum = 0;
+      for (let i = 0; i < SIZE - lag; i++) sum += buf[i] * buf[i + lag];
+      corr[lag] = sum;
+    }
+
+    // 找基频 — 在有效频率范围内找第一个峰值
+    const minLag = Math.floor(sampleRate / this.maxFreq);
+    const maxLag = Math.floor(sampleRate / this.minFreq);
+
+    let bestLag = -1, bestVal = -Infinity;
+    // 跨过第一个下降，找最高峰
+    let i = minLag;
+    while (i < maxLag && corr[i] > corr[i + 1]) i++; // 跳过初始斜坡
+    for (; i < maxLag - 1; i++) {
+      if (corr[i] > bestVal && corr[i] > corr[i - 1] && corr[i] > corr[i + 1]) {
+        bestVal = corr[i];
+        bestLag = i;
+      }
+    }
+    if (bestLag < 0) return null;
+
+    // 清晰度：归一化
+    const clarity = corr[bestLag] / corr[0];
+    if (clarity < this.clarityThreshold) return null;
+
+    // 抛物线插值提升精度
+    const y1 = corr[bestLag - 1], y2 = corr[bestLag], y3 = corr[bestLag + 1];
+    const refinedLag = bestLag + (y3 - y1) / (2 * (2 * y2 - y1 - y3));
+    const freq = sampleRate / refinedLag;
+
+    return this._freqToResult(freq, clarity);
+  }
+
+  // 频率 → 音符信息
+  _freqToResult(freq, clarity) {
+    const NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+    // A4 = 440Hz, MIDI 69
+    const midi = 12 * Math.log2(freq / 440) + 69;
+    const midiRound = Math.round(midi);
+    const cents = Math.round((midi - midiRound) * 100);
+    const octave = Math.floor(midiRound / 12) - 1;
+    const noteIndex = ((midiRound % 12) + 12) % 12;
+    const noteName = NOTES[noteIndex];
+    return {
+      note: noteName + octave,   // e.g. "A4"
+      noteName,                  // e.g. "A"
+      octave,                    // e.g. 4
+      freq: Math.round(freq * 10) / 10,
+      midi: midiRound,
+      cents,
+      clarity: Math.round(clarity * 100) / 100
+    };
+  }
+}
+
+// ============================================================
+// UI 部分
+// ============================================================
+const detector = new PitchDetector();
+let active = false;
+let lastNote = null;
+let history = [];
+
+const noteEl = document.getElementById('noteName');
+const freqEl = document.getElementById('freqDisplay');
+const centsFill = document.getElementById('centsFill');
+const centsVal = document.getElementById('centsValue');
+const octaveEl = document.getElementById('octaveVal');
+const midiEl = document.getElementById('midiVal');
+const clarityEl = document.getElementById('clarityVal');
+const semitoneEl = document.getElementById('semitoneVal');
+const historyEl = document.getElementById('history');
+const btn = document.getElementById('toggleBtn');
+const canvas = document.getElementById('vizCanvas');
+const ctx = canvas.getContext('2d');
+
+// 设置canvas分辨率
+function resizeCanvas() {
+  canvas.width = canvas.offsetWidth * devicePixelRatio;
+  canvas.height = canvas.offsetHeight * devicePixelRatio;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+async function toggleMic() {
+  if (!active) {
+    try {
+      await detector.start();
+      active = true;
+      btn.textContent = '■ Stop Listening';
+      btn.classList.add('active');
+      detector.onPitch = updateUI;
+      drawLoop();
+    } catch(e) {
+      alert('无法访问麦克风: ' + e.message);
+    }
+  } else {
+    detector.stop();
+    active = false;
+    btn.textContent = '▶ Start Listening';
+    btn.classList.remove('active');
+    noteEl.textContent = '—';
+    noteEl.classList.add('silent');
+    freqEl.textContent = '';
+    resetMeter();
+  }
+}
+
+function updateUI(result) {
+  noteEl.textContent = result.note;
+  noteEl.classList.remove('silent');
+  freqEl.textContent = result.freq + ' Hz';
+  octaveEl.textContent = result.octave;
+  midiEl.textContent = result.midi;
+  clarityEl.textContent = (result.clarity * 100).toFixed(0) + '%';
+  semitoneEl.textContent = result.noteName;
+
+  // 音分偏差 meter
+  const pct = (result.cents + 50) / 100; // 0~1
+  const halfW = Math.abs(result.cents) / 2; // 0~50 → bar width %
+  const color = Math.abs(result.cents) < 10 ? 'var(--accent)' : Math.abs(result.cents) < 25 ? '#ffb347' : 'var(--accent2)';
+  if (result.cents >= 0) {
+    centsFill.style.left = '50%';
+    centsFill.style.width = halfW + '%';
+  } else {
+    centsFill.style.left = (50 - halfW) + '%';
+    centsFill.style.width = halfW + '%';
+  }
+  centsFill.style.background = color;
+  centsVal.textContent = (result.cents >= 0 ? '+' : '') + result.cents + ' cents';
+
+  // History
+  if (result.note !== lastNote) {
+    lastNote = result.note;
+    history.unshift(result.note);
+    if (history.length > 12) history.pop();
+    historyEl.innerHTML = history.map((n, i) =>
+      `<span class="history-tag" style="opacity:${1 - i * 0.07}">${n}</span>`
+    ).join('');
+  }
+}
+
+function resetMeter() {
+  centsFill.style.left = '50%';
+  centsFill.style.width = '0';
+  centsVal.textContent = '± 0 cents';
+  octaveEl.textContent = '—';
+  midiEl.textContent = '—';
+  clarityEl.textContent = '—';
+  semitoneEl.textContent = '—';
+}
+
+// 波形可视化
+function drawLoop() {
+  if (!active) return;
+  requestAnimationFrame(drawLoop);
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const data = detector.getTimeDomainData();
+  const len = data.length;
+
+  ctx.beginPath();
+  ctx.strokeStyle = '#00ffc8';
+  ctx.lineWidth = 1.5 * devicePixelRatio;
+  ctx.shadowColor = '#00ffc8';
+  ctx.shadowBlur = 6;
+
+  for (let i = 0; i < len; i++) {
+    const x = (i / len) * W;
+    const y = (0.5 + data[i] * 0.45) * H;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+}
+</script>
+</body>
+</html>
