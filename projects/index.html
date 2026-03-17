@@ -120,8 +120,7 @@
 		}
 
 		.switcher-center {
-			min-width: 320px;
-			max-width: 760px;
+			width: min(760px, calc(100vw - 180px));
 			text-align: center;
 			border-bottom: 1px solid rgba(255, 255, 255, 0.22);
 			padding: 8px 10px 12px 10px;
@@ -132,6 +131,9 @@
 			font-size: 1.28rem;
 			font-weight: 800;
 			letter-spacing: 0.04em;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 
 		.switcher-center p {
@@ -149,6 +151,31 @@
 
 		.style-panel.active {
 			display: block;
+			animation: panel-reveal 0.42s ease both;
+		}
+
+		@keyframes panel-reveal {
+			0% {
+				opacity: 0;
+				transform: translateY(10px);
+			}
+
+			100% {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		#bg {
+			transition: opacity 0.36s ease;
+		}
+
+		#bg.bg-switching {
+			opacity: 0.45;
+		}
+
+		#bg.bg-static {
+			animation: none !important;
 		}
 
 		.projects-intro {
@@ -171,6 +198,48 @@
 			font-size: 1rem;
 			line-height: 1.8;
 			color: rgba(255, 255, 255, 0.74);
+		}
+
+		.projects-intro-directory {
+			margin: 26px auto 0 auto;
+			max-width: 620px;
+			padding-top: 18px;
+			border-top: 1px solid rgba(255, 255, 255, 0.2);
+			display: grid;
+			grid-template-columns: repeat(2, minmax(220px, 1fr));
+			gap: 10px 24px;
+			text-align: left;
+		}
+
+		.projects-intro-directory li {
+			list-style: none;
+			font-size: 0.9rem;
+			color: rgba(255, 255, 255, 0.82);
+			letter-spacing: 0.03em;
+		}
+
+		.projects-intro-directory button {
+			appearance: none;
+			border: 0;
+			padding: 0;
+			margin: 0;
+			background: transparent;
+			color: rgba(255, 255, 255, 0.82);
+			font-size: 0.9rem;
+			letter-spacing: 0.03em;
+			text-align: left;
+			cursor: pointer;
+			transition: color 0.2s ease;
+		}
+
+		.projects-intro-directory button:hover {
+			color: #ffffff;
+		}
+
+		.projects-intro-directory li span {
+			color: rgba(255, 255, 255, 0.56);
+			font-size: 0.78rem;
+			margin-left: 8px;
 		}
 
 		.works-grid {
@@ -300,7 +369,6 @@
 			}
 
 			.switcher-center {
-				min-width: 0;
 				width: calc(100% - 110px);
 				padding: 12px;
 			}
@@ -311,6 +379,11 @@
 
 			.switcher-center p {
 				font-size: 0.78rem;
+			}
+
+			.projects-intro-directory {
+				grid-template-columns: 1fr;
+				max-width: 420px;
 			}
 		}
 	</style>
@@ -336,9 +409,19 @@
 
 		<section class="style-panel" data-style="glitch">
 			<div class="works-grid">
+				<a href="https://www.bilibili.com/video/BV1KH6sB2EUn" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<div class="work-placeholder-text">Hyper Cover 1</div>
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Sky Fractured and Glitched - breakcore x glitchcore x digicore x hyperpop type beat</h3>
+						<p>Produced by R&amp;S Studio</p>
+					</div>
+				</a>
 				<a href="https://www.bilibili.com/video/BV1si4y1z7NZ" target="_blank" class="work-card">
 					<div class="work-image-wrapper">
-						<img src="../assets/css/images/music4.png" alt="Hyperpop Beat">
+						<div class="work-placeholder-text">Hyper Cover 2</div>
 						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
 					</div>
 					<div class="work-info">
@@ -346,93 +429,172 @@
 						<p>Produced by Rouri</p>
 					</div>
 				</a>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 2</div></div><div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 3</div></div><div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 4</div></div><div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 5</div></div><div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 6</div></div><div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<a href="https://www.bilibili.com/video/BV1ou5CzKECr" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<div class="work-placeholder-text">Hyper Cover 3</div>
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Vinso x Tenoji x Hyperpop type beat</h3>
+						<p>Produced by Rouri</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV1Y2XoYpE8F" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<div class="work-placeholder-text">Hyper Cover 4</div>
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Glitched Me // glitchsphere x hyperpop x yandere type beat</h3>
+						<p>Produced by Rouri</p>
+					</div>
+				</a>
 			</div>
 		</section>
 
 		<section class="style-panel active" data-style="intro">
 			<div class="projects-intro">
 				<h2>Projects Home</h2>
-				<p>More projects are organized by style. Use the arrow buttons to move to <strong>Glitch / Hyper</strong> and continue browsing each category.</p>
+				<p>More projects are organized by style. Use arrows to browse and compare textures, writing approaches, and production focus.</p>
+				<ul class="projects-intro-directory">
+					<li><button type="button" data-target-style="glitch">Glitch / Hyper <span>Cyber, distorted, high-energy</span></button></li>
+					<li><button type="button" data-target-style="piano">Piano Core <span>Melodic center and harmonic depth</span></button></li>
+					<li><button type="button" data-target-style="acoustic">Acoustic Folk <span>Wood-guitar intimacy and warmth</span></button></li>
+					<li><button type="button" data-target-style="atmosphere">Atmosphere / Soundscape <span>Scene-first ambient mood</span></button></li>
+					<li><button type="button" data-target-style="emo">Emo / Anime Vibes <span>Youthful emotional narrative</span></button></li>
+				</ul>
 			</div>
 		</section>
 
 		<section class="style-panel" data-style="emo">
 			<div class="works-grid">
-				<a href="https://www.bilibili.com/video/BV17w411n7N8" target="_blank" class="work-card">
+				<a href="https://www.bilibili.com/video/BV124kTBKEE5" target="_blank" class="work-card">
 					<div class="work-image-wrapper">
-						<img src="../assets/css/images/music1.png" alt="Yandere Beat">
+						<div class="work-placeholder-text">Emo Cover 1</div>
 						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
 					</div>
 					<div class="work-info">
-						<h3>Yandere x Emotional x Piano type beat</h3>
+						<h3>EMO Emotional Anime Type Beat</h3>
+						<p>Produced by R&amp;S Studio</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV17w411n7N8" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<div class="work-placeholder-text">Emo Cover 2</div>
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>The Feeling of Dreaming About You - Yandere x Emotional x Piano type beat</h3>
 						<p>Produced by Rouri</p>
 					</div>
 				</a>
-				<a href="https://www.bilibili.com/video/BV124kTBKEE5" target="_blank" class="work-card">
+				<a href="https://www.bilibili.com/video/BV1inxhz8E8P" target="_blank" class="work-card">
 					<div class="work-image-wrapper">
-						<img src="../assets/css/images/music2.png" alt="EMO Beat">
+						<div class="work-placeholder-text">Emo Cover 3</div>
 						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
 					</div>
 					<div class="work-info">
-						<h3>EMO (emotional) x anime/manga x type beat</h3>
-						<p>Produced by R&S Studio</p>
+						<h3>Ultimate Tenderness - diary*anime*violet type beat</h3>
+						<p>Produced by Rouri</p>
 					</div>
 				</a>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 3</div></div><div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 4</div></div><div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 5</div></div><div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 6</div></div><div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<a href="https://www.bilibili.com/video/BV1z7ZZBuEsy" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<div class="work-placeholder-text">Emo Cover 4</div>
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Rainy Night, Neon Lights, City-Edge Piano and Emoplugg</h3>
+						<p>Produced by Safara</p>
+					</div>
+				</a>
 			</div>
 		</section>
 
 		<section class="style-panel" data-style="piano">
 			<div class="works-grid">
-				<a href="https://www.youtube.com/watch?v=bvWkO30kiZc" target="_blank" class="work-card">
+				<a href="https://www.bilibili.com/video/BV13rF6zmEVj" target="_blank" class="work-card">
 					<div class="work-image-wrapper">
-						<img src="../assets/css/images/music3.png" alt="After Prom">
+						<div class="work-placeholder-text">Piano Cover 1</div>
 						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
 					</div>
 					<div class="work-info">
-						<h3>After Prom (Emotional Piano & Strings)</h3>
+						<h3>Station, Light Rain, and a Japanese Piano Left in Place</h3>
+						<p>Produced by Safara</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV1xwzQBnEvm" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<div class="work-placeholder-text">Piano Cover 2</div>
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>3AM, Dorm Rain, and My Second Lo-fi</h3>
+						<p>Produced by Safara</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV12VcjzrEd8" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<div class="work-placeholder-text">Piano Cover 3</div>
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Guofeng, Old Year's Eve, A Stranger in a New Land, and an Untimely Original Piano Piece</h3>
 						<p>Composed by Safara</p>
 					</div>
 				</a>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 2</div></div><div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 3</div></div><div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 4</div></div><div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 5</div></div><div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 6</div></div><div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<a href="https://www.youtube.com/watch?v=bvWkO30kiZc&list=RDMMbvWkO30kiZc&start_radio=1" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<div class="work-placeholder-text">Piano Cover 4</div>
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>After the Prom</h3>
+						<p>Produced by Safara</p>
+					</div>
+				</a>
 			</div>
 		</section>
 
 		<section class="style-panel" data-style="acoustic">
 			<div class="works-grid">
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 1</div></div><div class="work-info"><h3>Acoustic Folk - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<a href="https://www.bilibili.com/video/BV1zbP5zeE6y" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<div class="work-placeholder-text">Folk Cover 1</div>
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>This World Might Be Beautiful...</h3>
+						<p>Produced by R&amp;S Studio</p>
+					</div>
+				</a>
 			</div>
 		</section>
 
 		<section class="style-panel" data-style="atmosphere">
 			<div class="works-grid">
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 1</div></div><div class="work-info"><h3>Atmosphere Track - Live</h3><p>Add Link When Ready</p></div></div>
-				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 2</div></div><div class="work-info"><h3>Atmosphere Track - Tomorrow</h3><p>Reserved Slot</p></div></div>
+				<a href="https://www.bilibili.com/video/BV1QvwDzEE54" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<div class="work-placeholder-text">Atmosphere Cover 1</div>
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Piano for a Suspense / Micro-Horror Game Opening, Deeply Melancholic (Rework)</h3>
+						<p>Produced by Safara</p>
+					</div>
+				</a>
 			</div>
 		</section>
 	</main>
 
 	<script>
-		const introView = {
-			key: 'intro',
-			title: 'Projects Home',
-			desc: 'More projects are categorized by style. Right goes to Glitch / Hyper, left goes to Emo / Anime Vibes.',
-			bg: '../assets/css/images/bg_3.jpg'
-		};
-
 		const cycleStyles = [
+			{
+				key: 'intro',
+				title: 'Projects Home',
+				desc: 'Style directory. Right to Glitch / Hyper, left to Emo / Anime Vibes.',
+				bg: '../assets/css/images/bg_3.jpg'
+			},
 			{
 				key: 'glitch',
 				title: 'Glitch / Hyper',
@@ -466,20 +628,27 @@
 		];
 
 		let currentCycleIndex = 0;
-		let inIntro = true;
 		const titleEl = document.getElementById('styleTitle');
 		const descEl = document.getElementById('styleDesc');
 		const bgEl = document.getElementById('bg');
 		const panels = document.querySelectorAll('.style-panel');
-		const glitchIndex = cycleStyles.findIndex((style) => style.key === 'glitch');
-		const emoIndex = cycleStyles.findIndex((style) => style.key === 'emo');
+		const directoryButtons = document.querySelectorAll('[data-target-style]');
+
+		function switchBackground(bgUrl) {
+			bgEl.classList.add('bg-switching');
+			window.setTimeout(() => {
+				bgEl.style.backgroundImage = `url("${bgUrl}")`;
+				bgEl.classList.remove('bg-switching');
+			}, 170);
+		}
 
 		function renderView() {
-			const style = inIntro ? introView : cycleStyles[currentCycleIndex];
+			const style = cycleStyles[currentCycleIndex];
 
 			titleEl.textContent = style.title;
 			descEl.textContent = style.desc;
-			bgEl.style.backgroundImage = `url("${style.bg}")`;
+			switchBackground(style.bg);
+			bgEl.classList.toggle('bg-static', style.key !== 'intro');
 
 			panels.forEach((panel) => {
 				panel.classList.toggle('active', panel.dataset.style === style.key);
@@ -487,31 +656,27 @@
 		}
 
 		function goPrev() {
-			if (inIntro) {
-				inIntro = false;
-				currentCycleIndex = emoIndex;
-				renderView();
-				return;
-			}
-
 			currentCycleIndex = (currentCycleIndex - 1 + cycleStyles.length) % cycleStyles.length;
 			renderView();
 		}
 
 		function goNext() {
-			if (inIntro) {
-				inIntro = false;
-				currentCycleIndex = glitchIndex;
-				renderView();
-				return;
-			}
-
 			currentCycleIndex = (currentCycleIndex + 1) % cycleStyles.length;
+			renderView();
+		}
+
+		function goToStyle(key) {
+			const targetIndex = cycleStyles.findIndex((style) => style.key === key);
+			if (targetIndex < 0) return;
+			currentCycleIndex = targetIndex;
 			renderView();
 		}
 
 		document.getElementById('prevStyle').addEventListener('click', goPrev);
 		document.getElementById('nextStyle').addEventListener('click', goNext);
+		directoryButtons.forEach((button) => {
+			button.addEventListener('click', () => goToStyle(button.dataset.targetStyle));
+		});
 
 		window.addEventListener('keydown', (event) => {
 			if (event.key === 'ArrowLeft') goPrev();
