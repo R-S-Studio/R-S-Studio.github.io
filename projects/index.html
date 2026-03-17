@@ -68,12 +68,17 @@
 			padding: 92px 24px 50px 24px;
 		}
 
-		.top-home-link {
+		.top-nav {
 			position: fixed;
 			top: 18px;
 			left: 20px;
 			z-index: 25;
-			display: inline-block;
+			display: inline-flex;
+			gap: 8px;
+		}
+
+		.top-nav-btn {
+			appearance: none;
 			padding: 8px 14px;
 			font-size: 0.78rem;
 			letter-spacing: 0.1em;
@@ -84,10 +89,11 @@
 			text-decoration: none;
 			background: rgba(7, 10, 17, 0.34);
 			backdrop-filter: blur(4px);
+			cursor: pointer;
 			transition: all 0.25s ease;
 		}
 
-		.top-home-link:hover {
+		.top-nav-btn:hover {
 			border-color: rgba(255, 255, 255, 0.75);
 			background: rgba(255, 255, 255, 0.08);
 		}
@@ -261,6 +267,24 @@
 			position: absolute;
 			inset: 0;
 			background: linear-gradient(to top, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.12));
+		}
+
+		.style-tile-mini-tag {
+			position: absolute;
+			left: 8px;
+			bottom: 8px;
+			z-index: 1;
+			display: inline-block;
+			padding: 2px 7px;
+			border-radius: 999px;
+			background: rgba(8, 11, 18, 0.75);
+			border: 1px solid rgba(255, 255, 255, 0.24);
+			font-size: 0.64rem;
+			font-weight: 700;
+			letter-spacing: 0.08em;
+			line-height: 1.2;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.95);
 		}
 
 		.style-tile-label {
@@ -450,7 +474,10 @@
 		<div id="overlay"></div>
 	</div>
 
-	<a href="../index.html" class="top-home-link">Home</a>
+	<div class="top-nav" aria-label="Top navigation">
+		<a href="../index.html" class="top-nav-btn" aria-label="Back to main page">Back</a>
+		<button id="menuIntro" class="top-nav-btn" type="button" aria-label="Go to projects home">Menu</button>
+	</div>
 
 	<main class="page-shell">
 		<div class="switcher" aria-label="Style switcher">
@@ -514,7 +541,7 @@
 				<ul class="projects-intro-directory">
 					<li>
 						<button type="button" data-target-style="glitch">
-							<span class="style-tile-media" style="--tile-bg: url('../assets/css/images/page_bgs/bg_glitch.jpg')"></span>
+							<span class="style-tile-media" style="--tile-bg: url('../assets/css/images/page_bgs/bg_glitch.jpg')"><span class="style-tile-mini-tag">Glitch</span></span>
 							<span>
 								<span class="style-tile-label">Glitch / Hyper</span>
 								<span class="style-tile-sub">Cyber, distorted, high-energy</span>
@@ -523,7 +550,7 @@
 					</li>
 					<li>
 						<button type="button" data-target-style="piano">
-							<span class="style-tile-media" style="--tile-bg: url('../assets/css/images/page_bgs/bg_piano.jpg')"></span>
+							<span class="style-tile-media" style="--tile-bg: url('../assets/css/images/page_bgs/bg_piano.jpg')"><span class="style-tile-mini-tag">Piano</span></span>
 							<span>
 								<span class="style-tile-label">Piano Core</span>
 								<span class="style-tile-sub">Melodic center and harmonic depth</span>
@@ -532,7 +559,7 @@
 					</li>
 					<li>
 						<button type="button" data-target-style="acoustic">
-							<span class="style-tile-media" style="--tile-bg: url('../assets/css/images/page_bgs/bg_flok.jpg')"></span>
+							<span class="style-tile-media" style="--tile-bg: url('../assets/css/images/page_bgs/bg_flok.jpg')"><span class="style-tile-mini-tag">Acoustic</span></span>
 							<span>
 								<span class="style-tile-label">Acoustic Folk</span>
 								<span class="style-tile-sub">Wood-guitar intimacy and warmth</span>
@@ -541,7 +568,7 @@
 					</li>
 					<li>
 						<button type="button" data-target-style="atmosphere">
-							<span class="style-tile-media" style="--tile-bg: url('../assets/css/images/page_bgs/bg_atmosphere.jpg')"></span>
+							<span class="style-tile-media" style="--tile-bg: url('../assets/css/images/page_bgs/bg_atmosphere.jpg')"><span class="style-tile-mini-tag">Atmosphere</span></span>
 							<span>
 								<span class="style-tile-label">Atmosphere / Soundscape</span>
 								<span class="style-tile-sub">Scene-first ambient mood</span>
@@ -550,7 +577,7 @@
 					</li>
 					<li>
 						<button type="button" data-target-style="emo">
-							<span class="style-tile-media" style="--tile-bg: url('../assets/css/images/page_bgs/bg_emo.jpg')"></span>
+							<span class="style-tile-media" style="--tile-bg: url('../assets/css/images/page_bgs/bg_emo.jpg')"><span class="style-tile-mini-tag">Emo</span></span>
 							<span>
 								<span class="style-tile-label">Emo / Anime Vibes</span>
 								<span class="style-tile-sub">Youthful emotional narrative</span>
@@ -797,6 +824,7 @@
 
 		document.getElementById('prevStyle').addEventListener('click', goPrev);
 		document.getElementById('nextStyle').addEventListener('click', goNext);
+		document.getElementById('menuIntro').addEventListener('click', () => goToStyle('intro'));
 		directoryButtons.forEach((button) => {
 			button.addEventListener('click', () => goToStyle(button.dataset.targetStyle));
 		});
