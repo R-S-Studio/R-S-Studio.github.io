@@ -67,10 +67,16 @@
 
 		/* Disable the original CSS overlay entrance animation (1.5s delay was
 		   causing a second visual "flash"). Opacity is now fully controlled by
-		   the JS scroll controller. */
+		   the JS scroll controller.
+		   Also strip will-change + translateZ — overlay is now static, no GPU
+		   compositing layer needed. Without this, Chrome promotes #overlay to
+		   its own composite layer which ignores z-index and paints over the
+		   header icons. */
 		#overlay {
 			animation: none !important;
 			opacity: 1;
+			will-change: auto !important;
+			transform: none !important;
 		}
 
 		/* --- Rain Container (Strict Alignment) --- */
@@ -94,6 +100,21 @@
 			height: 100%;
 			z-index: 1;
 			overflow: hidden;
+		}
+
+		/* --- Scale to match 140% zoom visual --- */
+		#header {
+			zoom: 1.4;
+		}
+
+		/* Ensure header icons sit above the diagonal overlay glass */
+		#main {
+			z-index: 5 !important;
+		}
+
+		.content-section,
+		#projects {
+			zoom: 1.4;
 		}
 
 		/* --- Navigation --- */
