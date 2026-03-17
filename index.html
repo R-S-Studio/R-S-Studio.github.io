@@ -157,6 +157,29 @@
 			animation: arrow-bounce 2s ease-in-out infinite;
 		}
 
+		.top-project-link {
+			position: absolute;
+			top: 22px;
+			right: 26px;
+			z-index: 120;
+			padding: 8px 14px;
+			font-size: 0.78rem;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.9);
+			border: 1px solid rgba(255, 255, 255, 0.35);
+			border-radius: 20px;
+			text-decoration: none;
+			background: rgba(7, 10, 17, 0.35);
+			backdrop-filter: blur(4px);
+			transition: all 0.25s ease;
+		}
+
+		.top-project-link:hover {
+			border-color: rgba(255, 255, 255, 0.75);
+			background: rgba(255, 255, 255, 0.08);
+		}
+
 		@keyframes arrow-bounce {
 
 			0%,
@@ -442,6 +465,57 @@
 			color: rgba(255, 255, 255, 0.33);
 		}
 
+		.projects-jump-section {
+			position: relative;
+			width: 100%;
+			padding: 70px 40px 90px 40px;
+			text-align: center;
+			background: #070a11;
+			z-index: 55;
+		}
+
+		.projects-jump-inner {
+			max-width: 760px;
+			margin: 0 auto;
+			padding: 30px 24px;
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+		}
+
+		.projects-jump-inner h3 {
+			margin: 0 0 10px 0;
+			font-size: 1.5rem;
+			font-weight: 700;
+			color: #fff;
+			letter-spacing: 0.03em;
+		}
+
+		.projects-jump-inner p {
+			margin: 0 0 24px 0;
+			color: rgba(255, 255, 255, 0.66);
+			font-size: 0.95rem;
+		}
+
+		.see-projects-btn {
+			display: inline-block;
+			padding: 12px 24px;
+			border-radius: 24px;
+			border: 1px solid rgba(255, 255, 255, 0.5);
+			color: #fff;
+			text-decoration: none;
+			text-transform: uppercase;
+			letter-spacing: 0.12em;
+			font-size: 0.78rem;
+			font-weight: 700;
+			transition: all 0.25s ease;
+		}
+
+		.see-projects-btn:hover {
+			transform: translateY(-2px);
+			border-color: #fff;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+		}
+
 		/* --- Mobile Optimization --- */
 		@media screen and (max-width: 1024px) {
 
@@ -491,6 +565,13 @@
 
 			.works-grid {
 				grid-template-columns: 1fr;
+			}
+
+			.top-project-link {
+				top: 14px;
+				right: 14px;
+				font-size: 0.72rem;
+				padding: 7px 12px;
 			}
 
 			.works-category-header {
@@ -561,6 +642,7 @@
 
 	<!-- Cover Section -->
 	<section class="cover-section">
+		<a href="projects/" class="top-project-link">Project</a>
 		<!-- Rain Container moved here as a direct child for correct width reference -->
 		<div class="rain-container">
 			<div class="rain-line"></div>
@@ -653,166 +735,11 @@
 		</div>
 	</section>
 
-	<!-- Selected Works Section -->
-	<section id="works" class="works-section">
-		<div class="content-inner">
-			<div class="works-title-container">
-				<h2 class="big-title">Selected Works</h2>
-			</div>
-			<p class="works-note">Structured by vibe and production direction. Empty slots are reserved for upcoming releases.</p>
-
-			<div class="works-category">
-				<div class="works-category-header">
-					<h3>Glitch / Hyper</h3>
-					<span>6 Slots</span>
-				</div>
-				<div class="works-grid">
-					<a href="https://www.bilibili.com/video/BV1si4y1z7NZ" target="_blank" class="work-card">
-						<div class="work-image-wrapper">
-							<img src="assets/css/images/music4.png" alt="Hyperpop Beat">
-							<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
-						</div>
-						<div class="work-info">
-							<h3>Hyperpop x Emotion x Piano type beat</h3>
-							<p>Produced by Rouri</p>
-						</div>
-					</a>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 2</div></div>
-						<div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 3</div></div>
-						<div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 4</div></div>
-						<div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 5</div></div>
-						<div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 6</div></div>
-						<div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="works-category">
-				<div class="works-category-header">
-					<h3>Emo / Anime Vibes</h3>
-					<span>6 Slots</span>
-				</div>
-				<div class="works-grid">
-					<a href="https://www.bilibili.com/video/BV17w411n7N8" target="_blank" class="work-card">
-						<div class="work-image-wrapper">
-							<img src="assets/css/images/music1.png" alt="Yandere Beat">
-							<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
-						</div>
-						<div class="work-info">
-							<h3>Yandere x Emotional x Piano type beat</h3>
-							<p>Produced by Rouri</p>
-						</div>
-					</a>
-					<a href="https://www.bilibili.com/video/BV124kTBKEE5" target="_blank" class="work-card">
-						<div class="work-image-wrapper">
-							<img src="assets/css/images/music2.png" alt="EMO Beat">
-							<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
-						</div>
-						<div class="work-info">
-							<h3>EMO (emotional) x anime/manga x type beat</h3>
-							<p>Produced by R&S Studio</p>
-						</div>
-					</a>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 3</div></div>
-						<div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 4</div></div>
-						<div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 5</div></div>
-						<div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 6</div></div>
-						<div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="works-category">
-				<div class="works-category-header">
-					<h3>Piano Core</h3>
-					<span>6 Slots</span>
-				</div>
-				<div class="works-grid">
-					<a href="https://www.youtube.com/watch?v=bvWkO30kiZc" target="_blank" class="work-card">
-						<div class="work-image-wrapper">
-							<img src="assets/css/images/music3.png" alt="After Prom">
-							<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
-						</div>
-						<div class="work-info">
-							<h3>After Prom (Emotional Piano & Strings)</h3>
-							<p>Composed by Safara</p>
-						</div>
-					</a>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 2</div></div>
-						<div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 3</div></div>
-						<div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 4</div></div>
-						<div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 5</div></div>
-						<div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 6</div></div>
-						<div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="works-category">
-				<div class="works-category-header">
-					<h3>Acoustic Folk (Wood Guitar)</h3>
-					<span>1 Slot</span>
-				</div>
-				<div class="works-grid">
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 1</div></div>
-						<div class="work-info"><h3>Acoustic Folk - Upcoming</h3><p>Reserved Slot</p></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="works-category" style="margin-bottom: 0;">
-				<div class="works-category-header">
-					<h3>Atmosphere / Soundscape</h3>
-					<span>2 Slots</span>
-				</div>
-				<div class="works-grid">
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 1</div></div>
-						<div class="work-info"><h3>Atmosphere Track - Live</h3><p>Add Link When Ready</p></div>
-					</div>
-					<div class="work-card is-placeholder">
-						<div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 2</div></div>
-						<div class="work-info"><h3>Atmosphere Track - Tomorrow</h3><p>Reserved Slot</p></div>
-					</div>
-				</div>
-			</div>
+	<section id="works" class="projects-jump-section">
+		<div class="projects-jump-inner">
+			<h3>Projects</h3>
+			<p>Explore all styles in a focused, switchable view with dedicated backgrounds for each vibe.</p>
+			<a href="projects/" class="see-projects-btn">See Projects</a>
 		</div>
 	</section>
 

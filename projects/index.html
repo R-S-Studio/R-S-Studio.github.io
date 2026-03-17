@@ -1,0 +1,468 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>R&S Studio - Projects</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="../assets/css/main.css" />
+	<link rel="stylesheet" href="../assets/css/noscript.css" />
+	<link rel="icon" type="image/png" href="../assets/css/images/favicon.png" />
+	<style>
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			overflow-x: hidden !important;
+			background: #070a11;
+			scroll-behavior: smooth;
+			font-family: 'Inter', sans-serif !important;
+		}
+
+		body {
+			overflow-y: auto;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		#wrapper,
+		#bg,
+		#overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			height: 100%;
+		}
+
+		#wrapper {
+			width: 100%;
+			overflow: hidden;
+			z-index: 1;
+		}
+
+		#bg {
+			background: #070a11 url("../assets/css/images/bg_3.jpg") bottom left;
+			background-repeat: repeat-x;
+			background-size: 2250px auto;
+			width: 6750px;
+			animation: bg 60s linear infinite;
+			will-change: transform;
+		}
+
+		#overlay {
+			width: 100%;
+			background-attachment: fixed, fixed;
+			background-image: url("../assets/css/images/overlay-pattern.png"), url("../assets/css/images/overlay.svg");
+			background-position: top left, center center;
+			background-repeat: repeat, no-repeat;
+			background-size: auto, cover;
+			opacity: 0.9;
+			z-index: 2;
+		}
+
+		.page-shell {
+			position: relative;
+			z-index: 5;
+			min-height: 100vh;
+			padding: 92px 24px 50px 24px;
+		}
+
+		.top-home-link {
+			position: fixed;
+			top: 18px;
+			left: 20px;
+			z-index: 25;
+			display: inline-block;
+			padding: 8px 14px;
+			font-size: 0.78rem;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.92);
+			border: 1px solid rgba(255, 255, 255, 0.35);
+			border-radius: 20px;
+			text-decoration: none;
+			background: rgba(7, 10, 17, 0.34);
+			backdrop-filter: blur(4px);
+			transition: all 0.25s ease;
+		}
+
+		.top-home-link:hover {
+			border-color: rgba(255, 255, 255, 0.75);
+			background: rgba(255, 255, 255, 0.08);
+		}
+
+		.switcher {
+			max-width: 980px;
+			margin: 0 auto 26px auto;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 14px;
+		}
+
+		.switcher-btn {
+			width: 42px;
+			height: 42px;
+			border-radius: 999px;
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			background: rgba(9, 12, 20, 0.52);
+			color: #fff;
+			font-size: 1.2rem;
+			line-height: 1;
+			cursor: pointer;
+			transition: all 0.25s ease;
+		}
+
+		.switcher-btn:hover {
+			border-color: rgba(255, 255, 255, 0.8);
+			transform: translateY(-2px);
+		}
+
+		.switcher-center {
+			min-width: 320px;
+			max-width: 760px;
+			text-align: center;
+			border: 1px solid rgba(255, 255, 255, 0.14);
+			background: rgba(9, 12, 20, 0.45);
+			padding: 14px 16px;
+		}
+
+		.switcher-center h1 {
+			margin: 0;
+			font-size: 1.28rem;
+			font-weight: 800;
+			letter-spacing: 0.04em;
+		}
+
+		.switcher-center p {
+			margin: 6px 0 0 0;
+			font-size: 0.86rem;
+			color: rgba(255, 255, 255, 0.7);
+			line-height: 1.5;
+		}
+
+		.style-panel {
+			display: none;
+			max-width: 1100px;
+			margin: 0 auto;
+		}
+
+		.style-panel.active {
+			display: block;
+		}
+
+		.works-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 40px 32px;
+		}
+
+		.work-card {
+			display: block;
+			text-decoration: none;
+		}
+
+		.work-card.is-placeholder {
+			cursor: default;
+		}
+
+		.work-image-wrapper {
+			position: relative;
+			border: 6px solid #ffffff;
+			border-radius: 2px;
+			overflow: hidden;
+			aspect-ratio: 16 / 9;
+			background: #000;
+			transition: all 0.35s ease;
+		}
+
+		.work-image-wrapper img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: transform 0.45s ease;
+		}
+
+		.work-placeholder-text {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: linear-gradient(135deg, #111726 0%, #1c2234 50%, #0f1422 100%);
+			color: rgba(255, 255, 255, 0.52);
+			font-size: 0.82rem;
+			text-transform: uppercase;
+			letter-spacing: 0.14em;
+		}
+
+		.work-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.4);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			opacity: 0;
+			transition: opacity 0.25s ease;
+		}
+
+		.work-overlay i {
+			font-size: 3rem;
+		}
+
+		.work-card:hover .work-image-wrapper {
+			transform: translateY(-8px);
+			box-shadow: 0 15px 35px rgba(0, 0, 0, 0.55);
+		}
+
+		.work-card:hover .work-overlay {
+			opacity: 1;
+		}
+
+		.work-card:hover .work-image-wrapper img {
+			transform: scale(1.06);
+		}
+
+		.work-card.is-placeholder:hover .work-image-wrapper,
+		.work-card.is-placeholder:hover .work-image-wrapper img {
+			transform: none;
+			box-shadow: none;
+		}
+
+		.work-info {
+			margin-top: 16px;
+			padding-left: 14px;
+			border-left: 1px solid rgba(255, 255, 255, 0.15);
+		}
+
+		.work-info h3 {
+			margin: 0 0 6px 0;
+			color: #fff;
+			font-size: 1.08rem;
+			font-weight: 700;
+		}
+
+		.work-info p {
+			margin: 0;
+			color: rgba(255, 255, 255, 0.43);
+			font-size: 0.8rem;
+			text-transform: uppercase;
+		}
+
+		@media screen and (max-width: 1024px) {
+			#bg {
+				position: absolute;
+				height: 100%;
+				background-size: 750px auto;
+				width: 2250px;
+				background-attachment: scroll;
+				animation: bg 60s linear infinite;
+			}
+
+			#overlay {
+				position: absolute;
+				height: 100%;
+				background-attachment: scroll;
+			}
+
+			.works-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.switcher {
+				gap: 10px;
+			}
+
+			.switcher-center {
+				min-width: 0;
+				width: calc(100% - 110px);
+				padding: 12px;
+			}
+
+			.switcher-center h1 {
+				font-size: 1.05rem;
+			}
+
+			.switcher-center p {
+				font-size: 0.78rem;
+			}
+		}
+	</style>
+</head>
+
+<body class="is-preload">
+	<div id="wrapper">
+		<div id="bg"></div>
+		<div id="overlay"></div>
+	</div>
+
+	<a href="../index.html" class="top-home-link">Home</a>
+
+	<main class="page-shell">
+		<div class="switcher" aria-label="Style switcher">
+			<button id="prevStyle" class="switcher-btn" type="button" aria-label="Previous style">&#10094;</button>
+			<div class="switcher-center">
+				<h1 id="styleTitle">Piano Core</h1>
+				<p id="styleDesc">Melody-forward writing focused on emotional piano lines and cinematic harmonic movement.</p>
+			</div>
+			<button id="nextStyle" class="switcher-btn" type="button" aria-label="Next style">&#10095;</button>
+		</div>
+
+		<section class="style-panel" data-style="glitch">
+			<div class="works-grid">
+				<a href="https://www.bilibili.com/video/BV1si4y1z7NZ" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<img src="../assets/css/images/music4.png" alt="Hyperpop Beat">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Hyperpop x Emotion x Piano type beat</h3>
+						<p>Produced by Rouri</p>
+					</div>
+				</a>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 2</div></div><div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 3</div></div><div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 4</div></div><div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 5</div></div><div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 6</div></div><div class="work-info"><h3>Glitch / Hyper - Upcoming</h3><p>Reserved Slot</p></div></div>
+			</div>
+		</section>
+
+		<section class="style-panel" data-style="emo">
+			<div class="works-grid">
+				<a href="https://www.bilibili.com/video/BV17w411n7N8" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<img src="../assets/css/images/music1.png" alt="Yandere Beat">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Yandere x Emotional x Piano type beat</h3>
+						<p>Produced by Rouri</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV124kTBKEE5" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<img src="../assets/css/images/music2.png" alt="EMO Beat">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>EMO (emotional) x anime/manga x type beat</h3>
+						<p>Produced by R&S Studio</p>
+					</div>
+				</a>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 3</div></div><div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 4</div></div><div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 5</div></div><div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 6</div></div><div class="work-info"><h3>Emo / Anime Vibes - Upcoming</h3><p>Reserved Slot</p></div></div>
+			</div>
+		</section>
+
+		<section class="style-panel active" data-style="piano">
+			<div class="works-grid">
+				<a href="https://www.youtube.com/watch?v=bvWkO30kiZc" target="_blank" class="work-card">
+					<div class="work-image-wrapper">
+						<img src="../assets/css/images/music3.png" alt="After Prom">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>After Prom (Emotional Piano & Strings)</h3>
+						<p>Composed by Safara</p>
+					</div>
+				</a>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 2</div></div><div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 3</div></div><div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 4</div></div><div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 5</div></div><div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 6</div></div><div class="work-info"><h3>Piano Core - Upcoming</h3><p>Reserved Slot</p></div></div>
+			</div>
+		</section>
+
+		<section class="style-panel" data-style="acoustic">
+			<div class="works-grid">
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 1</div></div><div class="work-info"><h3>Acoustic Folk - Upcoming</h3><p>Reserved Slot</p></div></div>
+			</div>
+		</section>
+
+		<section class="style-panel" data-style="atmosphere">
+			<div class="works-grid">
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 1</div></div><div class="work-info"><h3>Atmosphere Track - Live</h3><p>Add Link When Ready</p></div></div>
+				<div class="work-card is-placeholder"><div class="work-image-wrapper"><div class="work-placeholder-text">Cover Slot 2</div></div><div class="work-info"><h3>Atmosphere Track - Tomorrow</h3><p>Reserved Slot</p></div></div>
+			</div>
+		</section>
+	</main>
+
+	<script>
+		const styles = [
+			{
+				key: 'glitch',
+				title: 'Glitch / Hyper',
+				desc: 'Digital distortion, clipped transients, and cyber-edged groove design for high-energy edits.',
+				bg: '../assets/css/images/bg_1.jpg'
+			},
+			{
+				key: 'emo',
+				title: 'Emo / Anime Vibes',
+				desc: 'Emotion-forward progressions and melodic motifs tailored for anime-coded youth drama energy.',
+				bg: '../assets/css/images/bg_2.jpg'
+			},
+			{
+				key: 'piano',
+				title: 'Piano Core',
+				desc: 'Melody-forward writing focused on emotional piano lines and cinematic harmonic movement.',
+				bg: '../assets/css/images/bg_3.jpg'
+			},
+			{
+				key: 'acoustic',
+				title: 'Acoustic Folk',
+				desc: 'Wood-guitar texture and singer-songwriter intimacy with organic space and warm tone.',
+				bg: '../assets/css/images/bg_4.jpg'
+			},
+			{
+				key: 'atmosphere',
+				title: 'Atmosphere / Soundscape',
+				desc: 'Scene-building ambient layers for suspense, exploration, and cinematic mood transitions.',
+				bg: '../assets/css/images/bg_5.jpg'
+			}
+		];
+
+		let currentIndex = 2;
+		const titleEl = document.getElementById('styleTitle');
+		const descEl = document.getElementById('styleDesc');
+		const bgEl = document.getElementById('bg');
+		const panels = document.querySelectorAll('.style-panel');
+
+		function renderStyle(index) {
+			const normalized = (index + styles.length) % styles.length;
+			currentIndex = normalized;
+			const style = styles[normalized];
+
+			titleEl.textContent = style.title;
+			descEl.textContent = style.desc;
+			bgEl.style.backgroundImage = `url("${style.bg}")`;
+
+			panels.forEach((panel) => {
+				panel.classList.toggle('active', panel.dataset.style === style.key);
+			});
+		}
+
+		document.getElementById('prevStyle').addEventListener('click', () => renderStyle(currentIndex - 1));
+		document.getElementById('nextStyle').addEventListener('click', () => renderStyle(currentIndex + 1));
+
+		window.addEventListener('keydown', (event) => {
+			if (event.key === 'ArrowLeft') renderStyle(currentIndex - 1);
+			if (event.key === 'ArrowRight') renderStyle(currentIndex + 1);
+		});
+
+		window.onload = function () {
+			document.body.classList.remove('is-preload');
+			renderStyle(currentIndex);
+		};
+	</script>
+</body>
+
+</html>
