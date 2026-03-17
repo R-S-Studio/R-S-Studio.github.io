@@ -102,21 +102,6 @@
 			overflow: hidden;
 		}
 
-		/* --- Scale to match 140% zoom visual --- */
-		#header {
-			zoom: 1.4;
-		}
-
-		/* Ensure header icons sit above the diagonal overlay glass */
-		#main {
-			z-index: 5 !important;
-		}
-
-		.content-section,
-		#projects {
-			zoom: 1.4;
-		}
-
 		/* --- Navigation --- */
 		#header nav ul {
 			display: flex;
@@ -695,6 +680,30 @@
 
 			.works-grid {
 				grid-template-columns: 1fr;
+			}
+
+			.proj-directory {
+				grid-template-columns: 1fr;
+				max-width: 520px;
+			}
+
+			.proj-directory li:last-child:nth-child(odd) {
+				grid-column: auto;
+				max-width: none;
+				margin: 0;
+			}
+
+			.style-tile-media {
+				width: 80px;
+				height: 80px;
+			}
+
+			.style-tile-label {
+				font-size: 0.88rem;
+			}
+
+			.style-tile-sub {
+				font-size: 0.76rem;
 			}
 
 			.top-project-link {
