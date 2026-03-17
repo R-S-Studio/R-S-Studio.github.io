@@ -53,7 +53,7 @@
 		#overlay {
 			width: 100%;
 			background-attachment: fixed, fixed;
-			background-image: url("../assets/css/images/overlay-pattern.png"), url("../assets/css/images/overlay.svg");
+			background-image: url("../assets/css/images/overlay-pattern.png"), url("../assets/css/images/overlay-projects.svg");
 			background-position: top left, center center;
 			background-repeat: repeat, no-repeat;
 			background-size: auto, cover;
@@ -123,9 +123,8 @@
 			min-width: 320px;
 			max-width: 760px;
 			text-align: center;
-			border: 1px solid rgba(255, 255, 255, 0.14);
-			background: rgba(9, 12, 20, 0.45);
-			padding: 14px 16px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+			padding: 8px 10px 12px 10px;
 		}
 
 		.switcher-center h1 {
@@ -150,6 +149,28 @@
 
 		.style-panel.active {
 			display: block;
+		}
+
+		.projects-intro {
+			max-width: 860px;
+			margin: 6vh auto 0 auto;
+			padding: 12px 0;
+			text-align: center;
+		}
+
+		.projects-intro h2 {
+			margin: 0 0 10px 0;
+			font-size: 2rem;
+			font-weight: 800;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+		}
+
+		.projects-intro p {
+			margin: 0;
+			font-size: 1rem;
+			line-height: 1.8;
+			color: rgba(255, 255, 255, 0.74);
 		}
 
 		.works-grid {
@@ -333,6 +354,13 @@
 			</div>
 		</section>
 
+		<section class="style-panel active" data-style="intro">
+			<div class="projects-intro">
+				<h2>Projects Home</h2>
+				<p>More projects are organized by style. Use the arrow buttons to move to <strong>Glitch / Hyper</strong> and continue browsing each category.</p>
+			</div>
+		</section>
+
 		<section class="style-panel" data-style="emo">
 			<div class="works-grid">
 				<a href="https://www.bilibili.com/video/BV17w411n7N8" target="_blank" class="work-card">
@@ -362,7 +390,7 @@
 			</div>
 		</section>
 
-		<section class="style-panel active" data-style="piano">
+		<section class="style-panel" data-style="piano">
 			<div class="works-grid">
 				<a href="https://www.youtube.com/watch?v=bvWkO30kiZc" target="_blank" class="work-card">
 					<div class="work-image-wrapper">
@@ -397,18 +425,19 @@
 	</main>
 
 	<script>
-		const styles = [
+		const introView = {
+			key: 'intro',
+			title: 'Projects Home',
+			desc: 'More projects are categorized by style. Right goes to Glitch / Hyper, left goes to Emo / Anime Vibes.',
+			bg: '../assets/css/images/bg_3.jpg'
+		};
+
+		const cycleStyles = [
 			{
 				key: 'glitch',
 				title: 'Glitch / Hyper',
 				desc: 'Digital distortion, clipped transients, and cyber-edged groove design for high-energy edits.',
 				bg: '../assets/css/images/bg_1.jpg'
-			},
-			{
-				key: 'emo',
-				title: 'Emo / Anime Vibes',
-				desc: 'Emotion-forward progressions and melodic motifs tailored for anime-coded youth drama energy.',
-				bg: '../assets/css/images/bg_2.jpg'
 			},
 			{
 				key: 'piano',
@@ -427,19 +456,26 @@
 				title: 'Atmosphere / Soundscape',
 				desc: 'Scene-building ambient layers for suspense, exploration, and cinematic mood transitions.',
 				bg: '../assets/css/images/bg_5.jpg'
+			},
+			{
+				key: 'emo',
+				title: 'Emo / Anime Vibes',
+				desc: 'Emotion-forward progressions and melodic motifs tailored for anime-coded youth drama energy.',
+				bg: '../assets/css/images/bg_2.jpg'
 			}
 		];
 
-		let currentIndex = 2;
+		let currentCycleIndex = 0;
+		let inIntro = true;
 		const titleEl = document.getElementById('styleTitle');
 		const descEl = document.getElementById('styleDesc');
 		const bgEl = document.getElementById('bg');
 		const panels = document.querySelectorAll('.style-panel');
+		const glitchIndex = cycleStyles.findIndex((style) => style.key === 'glitch');
+		const emoIndex = cycleStyles.findIndex((style) => style.key === 'emo');
 
-		function renderStyle(index) {
-			const normalized = (index + styles.length) % styles.length;
-			currentIndex = normalized;
-			const style = styles[normalized];
+		function renderView() {
+			const style = inIntro ? introView : cycleStyles[currentCycleIndex];
 
 			titleEl.textContent = style.title;
 			descEl.textContent = style.desc;
@@ -450,17 +486,41 @@
 			});
 		}
 
-		document.getElementById('prevStyle').addEventListener('click', () => renderStyle(currentIndex - 1));
-		document.getElementById('nextStyle').addEventListener('click', () => renderStyle(currentIndex + 1));
+		function goPrev() {
+			if (inIntro) {
+				inIntro = false;
+				currentCycleIndex = emoIndex;
+				renderView();
+				return;
+			}
+
+			currentCycleIndex = (currentCycleIndex - 1 + cycleStyles.length) % cycleStyles.length;
+			renderView();
+		}
+
+		function goNext() {
+			if (inIntro) {
+				inIntro = false;
+				currentCycleIndex = glitchIndex;
+				renderView();
+				return;
+			}
+
+			currentCycleIndex = (currentCycleIndex + 1) % cycleStyles.length;
+			renderView();
+		}
+
+		document.getElementById('prevStyle').addEventListener('click', goPrev);
+		document.getElementById('nextStyle').addEventListener('click', goNext);
 
 		window.addEventListener('keydown', (event) => {
-			if (event.key === 'ArrowLeft') renderStyle(currentIndex - 1);
-			if (event.key === 'ArrowRight') renderStyle(currentIndex + 1);
+			if (event.key === 'ArrowLeft') goPrev();
+			if (event.key === 'ArrowRight') goNext();
 		});
 
 		window.onload = function () {
 			document.body.classList.remove('is-preload');
-			renderStyle(currentIndex);
+			renderView();
 		};
 	</script>
 </body>
