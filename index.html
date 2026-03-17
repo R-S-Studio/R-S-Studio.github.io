@@ -59,6 +59,20 @@
 			/* Critical: Clips the 6750px background */
 		}
 
+		/* Hero content fades out while scrolling through cover */
+		#main {
+			transition: opacity 0.12s linear;
+			will-change: opacity;
+		}
+
+		/* Disable the original CSS overlay entrance animation (1.5s delay was
+		   causing a second visual "flash"). Opacity is now fully controlled by
+		   the JS scroll controller. */
+		#overlay {
+			animation: none !important;
+			opacity: 1;
+		}
+
 		/* --- Rain Container (Strict Alignment) --- */
 		.cover-section>.rain-container {
 			position: absolute !important;
@@ -193,6 +207,9 @@
 			background: radial-gradient(circle at 50% 50%, #161a24 0%, #070a11 100%);
 			z-index: 50;
 			overflow: hidden;
+			/* Fade bottom edge so proj-bg bleeds through naturally */
+			-webkit-mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 100%);
+			mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 100%);
 		}
 
 		.content-section::before {
@@ -456,54 +473,157 @@
 			color: rgba(255, 255, 255, 0.33);
 		}
 
-		.projects-jump-section {
+		/* =============================================
+		   Inline Projects Section
+		   ============================================= */
+
+		/* Dedicated background for projects section */
+		#proj-bg {
+			position: fixed;
+			top: 0; left: 0;
+			height: 100%;
+			background: #070a11 url("assets/css/images/page_bgs/bg_1.jpg") bottom left;
+			background-repeat: repeat-x;
+			background-size: 2250px auto;
+			width: 6750px;
+			animation: bg 60s linear infinite;
+			will-change: transform, opacity;
+			transform: translateZ(0);
+			opacity: 0;         /* scroll controller sets this via style.opacity */
+			pointer-events: none;
+			z-index: 3;
+		}
+		#proj-bg.bg-static {
+			animation: none !important;
+			width: 100vw !important;
+			background-size: cover !important;
+			background-position: center center !important;
+		}
+		#proj-bg.bg-fading { opacity: 0 !important; }
+
+		/* Projects section container */
+		#projects {
 			position: relative;
-			width: 100%;
-			padding: 70px 40px 90px 40px;
-			text-align: center;
-			background: #070a11;
 			z-index: 55;
+			padding: 80px 24px 100px;
+			min-height: 100vh;
 		}
 
-		.projects-jump-inner {
-			max-width: 760px;
-			margin: 0 auto;
-			padding: 30px 24px;
+		/* Switcher */
+		.proj-switcher {
+			max-width: 980px;
+			margin: 0 auto 28px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 14px;
 		}
-
-		.projects-jump-inner h3 {
-			margin: 0 0 10px 0;
-			font-size: 1.5rem;
-			font-weight: 700;
+		.proj-sw-btn {
+			flex-shrink: 0;
+			width: 42px; height: 42px;
+			border-radius: 999px;
+			border: 1px solid rgba(255,255,255,0.3);
+			background: rgba(9,12,20,0.52);
 			color: #fff;
-			letter-spacing: 0.03em;
-		}
-
-		.projects-jump-inner p {
-			margin: 0 0 24px 0;
-			color: rgba(255, 255, 255, 0.66);
-			font-size: 0.95rem;
-		}
-
-		.see-projects-btn {
-			display: inline-block;
-			padding: 12px 24px;
-			border-radius: 24px;
-			border: 1px solid rgba(255, 255, 255, 0.5);
-			color: #fff;
-			text-decoration: none;
-			text-transform: uppercase;
-			letter-spacing: 0.12em;
-			font-size: 0.78rem;
-			font-weight: 700;
+			font-size: 1.2rem;
+			cursor: pointer;
 			transition: all 0.25s ease;
+			display: flex; align-items: center; justify-content: center;
+		}
+		.proj-sw-btn:hover { border-color: rgba(255,255,255,0.8); transform: translateY(-2px); }
+		.proj-sw-center {
+			width: min(760px, calc(100vw - 180px));
+			text-align: center;
+			border-bottom: 1px solid rgba(255,255,255,0.22);
+			padding: 8px 10px 12px;
+		}
+		.proj-sw-center h2 { margin: 0; font-size: 1.28rem; font-weight: 800; letter-spacing: 0.04em; }
+		.proj-sw-center p { margin: 6px 0 0; font-size: 0.86rem; color: rgba(255,255,255,0.7); line-height: 1.5; }
+
+		/* Panels */
+		.proj-panel { display: none; max-width: 1100px; margin: 0 auto; }
+		.proj-panel.active { display: block; }
+
+		/* Switcher text fade */
+		.proj-sw-center h2,
+		.proj-sw-center p {
+			transition: opacity 0.18s ease, transform 0.18s ease;
 		}
 
-		.see-projects-btn:hover {
-			transform: translateY(-2px);
-			border-color: #fff;
-			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+		/* Card reveal animation */
+		.proj-card-reveal {
+			opacity: 0;
+			transform: translateY(22px);
+			transition: opacity 0.55s ease, transform 0.55s ease;
 		}
+		.proj-card-reveal.revealed { opacity: 1; transform: translateY(0); }
+		.proj-card-reveal:nth-child(2) { transition-delay: 0.08s; }
+		.proj-card-reveal:nth-child(3) { transition-delay: 0.16s; }
+		.proj-card-reveal:nth-child(4) { transition-delay: 0.24s; }
+
+		/* Intro panel */
+		.proj-intro { max-width: 920px; margin: 4vh auto 0; text-align: center; }
+		.proj-intro > .proj-intro-label {
+			display: inline-block;
+			font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
+			text-transform: uppercase; color: rgba(255,255,255,0.35);
+			margin: 0 0 12px;
+		}
+		.proj-intro > p { margin: 0 auto; font-size: 0.95rem; line-height: 1.8; color: rgba(255,255,255,0.55); max-width: 540px; }
+		.proj-directory {
+			margin: 30px auto 0;
+			max-width: 920px;
+			padding: 26px 0 0;
+			border-top: 1px solid rgba(255,255,255,0.1);
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 12px;
+			list-style: none;
+		}
+		/* 5th item: centre in last row */
+		.proj-directory li:last-child:nth-child(odd) {
+			grid-column: 1 / -1;
+			max-width: calc(50% - 6px);
+			margin: 0 auto; width: 100%;
+		}
+		.proj-directory button {
+			appearance: none;
+			border: 1px solid rgba(255,255,255,0.16);
+			border-radius: 14px;
+			padding: 10px 16px 10px 10px; margin: 0;
+			background: rgba(10,13,22,0.55);
+			backdrop-filter: blur(8px);
+			color: rgba(255,255,255,0.92);
+			display: flex; align-items: center; gap: 14px;
+			text-align: left; cursor: pointer;
+			overflow: hidden; width: 100%;
+			transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+		}
+		.proj-directory button:hover {
+			transform: translateY(-3px);
+			border-color: rgba(255,255,255,0.45);
+			box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+			background: rgba(16,20,34,0.75);
+		}
+		.style-tile-media {
+			position: relative; display: block; flex-shrink: 0;
+			width: 90px; height: 90px;
+			border-radius: 10px; overflow: hidden;
+			background-image: var(--tile-bg);
+			background-size: cover; background-position: center;
+			filter: saturate(0.88) brightness(0.6) contrast(1.1);
+		}
+		.style-tile-media::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,0,0,0.5), rgba(0,0,0,0.08)); }
+		.style-tile-mini-tag {
+			position: absolute; left: 7px; bottom: 7px; z-index: 1;
+			display: inline-block; padding: 2px 7px; border-radius: 999px;
+			background: rgba(8,11,18,0.82); border: 1px solid rgba(255,255,255,0.2);
+			font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; line-height: 1.2;
+			text-transform: uppercase; color: rgba(255,255,255,0.9);
+		}
+		.style-tile-text { display: flex; flex-direction: column; gap: 5px; }
+		.style-tile-label { display: block; font-size: 0.92rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.22; }
+		.style-tile-sub { display: block; font-size: 0.8rem; line-height: 1.45; color: rgba(255,255,255,0.5); }
 
 		/* --- Mobile Optimization --- */
 		@media screen and (max-width: 1024px) {
@@ -631,7 +751,7 @@
 
 	<!-- Cover Section -->
 	<section class="cover-section">
-		<a href="projects/" class="top-project-link">Our Projects</a>
+		<a href="#projects" class="top-project-link" id="ourProjectsBtn">Our Projects</a>
 		<!-- Rain Container moved here as a direct child for correct width reference -->
 		<div class="rain-container">
 			<div class="rain-line"></div>
@@ -659,6 +779,7 @@
 		<div id="wrapper">
 			<div id="bg"></div>
 			<div id="overlay"></div>
+			<div id="proj-bg"></div>
 			<div id="main">
 				<header id="header">
 					<h1 style="font-weight: 900; letter-spacing: -0.04em;">R&S Studio</h1>
@@ -724,12 +845,228 @@
 		</div>
 	</section>
 
-	<section id="works" class="projects-jump-section">
-		<div class="projects-jump-inner">
-			<h3>Projects</h3>
-			<p>Explore all styles in a focused, switchable view with dedicated backgrounds for each vibe.</p>
-			<a href="projects/" class="see-projects-btn">See Projects</a>
+	<section id="projects">
+
+		<!-- Switcher -->
+		<div class="proj-switcher">
+			<button id="projPrev" class="proj-sw-btn" type="button" aria-label="Previous style">&#10094;</button>
+			<div class="proj-sw-center">
+				<h2 id="projTitle">Projects Home</h2>
+				<p id="projDesc">Style directory. Right to Glitch / Hyper, left to Emo / Anime Vibes.</p>
+			</div>
+			<button id="projNext" class="proj-sw-btn" type="button" aria-label="Next style">&#10095;</button>
 		</div>
+
+		<!-- Intro panel -->
+		<div class="proj-panel active" data-pstyle="intro">
+			<div class="proj-intro">
+				<p class="proj-intro-label">Browse by Style</p>
+				<p>Each category brings a distinct production lens — select one to dive in.</p>
+				<ul class="proj-directory">
+					<li>
+						<button type="button" data-ptarget="glitch">
+							<span class="style-tile-media" style="--tile-bg: url('assets/css/images/page_bgs/bg_glitch.jpg')"><span class="style-tile-mini-tag">Glitch</span></span>
+							<span class="style-tile-text"><span class="style-tile-label">Glitch / Hyper</span><span class="style-tile-sub">Cyber, distorted, high-energy</span></span>
+						</button>
+					</li>
+					<li>
+						<button type="button" data-ptarget="piano">
+							<span class="style-tile-media" style="--tile-bg: url('assets/css/images/page_bgs/bg_piano.jpg')"><span class="style-tile-mini-tag">Piano</span></span>
+							<span class="style-tile-text"><span class="style-tile-label">Piano Core</span><span class="style-tile-sub">Melodic center and harmonic depth</span></span>
+						</button>
+					</li>
+					<li>
+						<button type="button" data-ptarget="acoustic">
+							<span class="style-tile-media" style="--tile-bg: url('assets/css/images/page_bgs/bg_flok.jpg')"><span class="style-tile-mini-tag">Acoustic</span></span>
+							<span class="style-tile-text"><span class="style-tile-label">Acoustic Folk</span><span class="style-tile-sub">Wood-guitar intimacy and warmth</span></span>
+						</button>
+					</li>
+					<li>
+						<button type="button" data-ptarget="atmosphere">
+							<span class="style-tile-media" style="--tile-bg: url('assets/css/images/page_bgs/bg_atmosphere.jpg')"><span class="style-tile-mini-tag">Atmosphere</span></span>
+							<span class="style-tile-text"><span class="style-tile-label">Atmosphere / Soundscape</span><span class="style-tile-sub">Scene-first ambient mood</span></span>
+						</button>
+					</li>
+					<li>
+						<button type="button" data-ptarget="emo">
+							<span class="style-tile-media" style="--tile-bg: url('assets/css/images/page_bgs/bg_emo.jpg')"><span class="style-tile-mini-tag">Emo</span></span>
+							<span class="style-tile-text"><span class="style-tile-label">Emo / Anime Vibes</span><span class="style-tile-sub">Youthful emotional narrative</span></span>
+						</button>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- Glitch panel -->
+		<div class="proj-panel" data-pstyle="glitch">
+			<div class="works-grid">
+				<a href="https://www.bilibili.com/video/BV1KH6sB2EUn" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/glitch_1.png" alt="Sky Fractured and Glitched">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Sky Fractured and Glitched - breakcore x glitchcore x digicore x hyperpop type beat</h3>
+						<p>Produced by R&amp;S Studio</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV1si4y1z7NZ" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/glitch_2.png" alt="Hyperpop x Emotion x Piano type beat">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Hyperpop x Emotion x Piano type beat</h3>
+						<p>Produced by Rouri</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV1ou5CzKECr" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/glitch_3.png" alt="Vinso x Tenoji x Hyperpop type beat">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Vinso x Tenoji x Hyperpop type beat</h3>
+						<p>Produced by Rouri</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV1Y2XoYpE8F" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/glitch_4.png" alt="Glitched Me">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Glitched Me // glitchsphere x hyperpop x yandere type beat</h3>
+						<p>Produced by Rouri</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<!-- Piano panel -->
+		<div class="proj-panel" data-pstyle="piano">
+			<div class="works-grid">
+				<a href="https://www.bilibili.com/video/BV13rF6zmEVj" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/piano_1.png" alt="Station, Light Rain, and a Japanese Piano Left in Place">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Station, Light Rain, and a Japanese Piano Left in Place</h3>
+						<p>Produced by Safara</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV1xwzQBnEvm" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/piano_2.png" alt="3AM, Dorm Rain, and My Second Lo-fi">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>3AM, Dorm Rain, and My Second Lo-fi</h3>
+						<p>Produced by Safara</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV12VcjzrEd8" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/piano_3.png" alt="Guofeng, Old Year's Eve, A Stranger in a New Land">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Guofeng, Old Year's Eve, A Stranger in a New Land, and an Untimely Original Piano Piece</h3>
+						<p>Composed by Safara</p>
+					</div>
+				</a>
+				<a href="https://www.youtube.com/watch?v=bvWkO30kiZc" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/piano_4.png" alt="After the Prom">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>After the Prom</h3>
+						<p>Produced by Safara</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<!-- Acoustic panel -->
+		<div class="proj-panel" data-pstyle="acoustic">
+			<div class="works-grid">
+				<a href="https://www.bilibili.com/video/BV1zbP5zeE6y" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/folk_1.png" alt="This World Might Be Beautiful">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>This World Might Be Beautiful...</h3>
+						<p>Produced by R&amp;S Studio</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<!-- Atmosphere panel -->
+		<div class="proj-panel" data-pstyle="atmosphere">
+			<div class="works-grid">
+				<a href="https://www.bilibili.com/video/BV1QvwDzEE54" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/atmosphere_1.png" alt="Piano for a Suspense Game Opening">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Piano for a Suspense / Micro-Horror Game Opening, Deeply Melancholic (Rework)</h3>
+						<p>Produced by Safara</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<!-- Emo panel -->
+		<div class="proj-panel" data-pstyle="emo">
+			<div class="works-grid">
+				<a href="https://www.bilibili.com/video/BV124kTBKEE5" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/emo_1.png" alt="EMO Emotional Anime Type Beat">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>EMO Emotional Anime Type Beat</h3>
+						<p>Produced by R&amp;S Studio</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV17w411n7N8" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/emo_2.png" alt="The Feeling of Dreaming About You">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>The Feeling of Dreaming About You - Yandere x Emotional x Piano type beat</h3>
+						<p>Produced by Rouri</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV1inxhz8E8P" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/emo_3.png" alt="Ultimate Tenderness">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Ultimate Tenderness - diary*anime*violet type beat</h3>
+						<p>Produced by Rouri</p>
+					</div>
+				</a>
+				<a href="https://www.bilibili.com/video/BV1z7ZZBuEsy" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/emo_4.png" alt="Rainy Night, Neon Lights, City-Edge Piano and Emoplugg">
+						<div class="work-overlay"><i class="icon brands fa-youtube"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Rainy Night, Neon Lights, City-Edge Piano and Emoplugg</h3>
+						<p>Produced by Safara</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
 	</section>
 
 	<!-- Footer Signature -->
@@ -741,14 +1078,216 @@
 	</footer>
 
 	<script>
-		window.onload = function () {
-			document.body.classList.remove('is-preload');
-			// Limit rain count for performance on mobile
+		/* ── Main page init ──
+		   Script is at bottom of <body>, so DOM is already parsed.
+		   Remove is-preload after 2 rAFs (ensures ≥1 paint before animations
+		   start) — no longer waiting for all images like window.onload did,
+		   which caused a long freeze followed by a sudden all-at-once start. */
+		(function () {
 			if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
 				const lines = document.querySelectorAll('.rain-line');
 				for (let i = 12; i < lines.length; i++) lines[i].style.display = 'none';
 			}
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					document.body.classList.remove('is-preload');
+				});
+			});
+		})();
+
+		/* ── Smooth scroll for OUR PROJECTS button ── */
+		document.getElementById('ourProjectsBtn').addEventListener('click', function (e) {
+			e.preventDefault();
+			document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
+		});
+
+		/* ── Inline Projects Switcher ── */
+		const projStyles = [
+			{ key: 'intro',      title: 'Projects Home',          desc: 'Style directory. Right to Glitch / Hyper, left to Emo / Anime Vibes.',                                              bg: 'assets/css/images/page_bgs/bg_1.jpg',          static: false },
+			{ key: 'glitch',     title: 'Glitch / Hyper',         desc: 'Digital distortion, clipped transients, and cyber-edged groove design for high-energy edits.',                     bg: 'assets/css/images/page_bgs/bg_glitch.jpg',     static: true  },
+			{ key: 'piano',      title: 'Piano Core',             desc: 'Melody-forward writing focused on emotional piano lines and cinematic harmonic movement.',                          bg: 'assets/css/images/page_bgs/bg_piano.jpg',      static: true  },
+			{ key: 'acoustic',   title: 'Acoustic Folk',          desc: 'Wood-guitar texture and singer-songwriter intimacy with organic space and warm tone.',                             bg: 'assets/css/images/page_bgs/bg_flok.jpg',       static: true  },
+			{ key: 'atmosphere', title: 'Atmosphere / Soundscape', desc: 'Scene-building ambient layers for suspense, exploration, and cinematic mood transitions.',                        bg: 'assets/css/images/page_bgs/bg_atmosphere.jpg', static: true  },
+			{ key: 'emo',        title: 'Emo / Anime Vibes',      desc: 'Emotion-forward progressions and melodic motifs tailored for anime-coded youth drama energy.',                    bg: 'assets/css/images/page_bgs/bg_emo.jpg',        static: true  }
+		];
+
+		let projIndex   = 0;
+		let bgSwapTimer = null;
+		let panelTimer  = null;   /* crossfade sequence timer */
+		const projTitleEl = document.getElementById('projTitle');
+		const projDescEl  = document.getElementById('projDesc');
+		const projBgEl    = document.getElementById('proj-bg');
+		const projPanels  = document.querySelectorAll('.proj-panel');
+
+		/* preload all project backgrounds */
+		projStyles.forEach(s => { const i = new Image(); i.src = s.bg; });
+
+		function switchProjBg(url, isStatic) {
+			projBgEl.classList.add('bg-fading');
+			if (bgSwapTimer) clearTimeout(bgSwapTimer);
+			const img = new Image();
+			let done = false;
+			const apply = () => {
+				if (done) return; done = true;
+				projBgEl.style.backgroundImage = `url("${url}")`;
+				projBgEl.classList.toggle('bg-static', isStatic);
+				bgSwapTimer = setTimeout(() => {
+					projBgEl.classList.remove('bg-fading');
+					bgSwapTimer = null;
+				}, 30);
+			};
+			img.onload = apply; img.onerror = apply; img.src = url;
+			if (img.complete) apply();
 		}
+
+		function revealCards(panel) {
+			panel.querySelectorAll('.proj-card-reveal').forEach(c => {
+				c.classList.remove('revealed');
+				requestAnimationFrame(() => requestAnimationFrame(() => c.classList.add('revealed')));
+			});
+		}
+
+		function renderProjView() {
+			const style    = projStyles[projIndex];
+			const oldPanel = Array.from(projPanels).find(p => p.classList.contains('active'));
+			const newPanel = Array.from(projPanels).find(p => p.dataset.pstyle === style.key);
+
+			/* Always switch the background */
+			switchProjBg(style.bg, style.static);
+
+			/* Same panel — nothing to crossfade */
+			if (oldPanel === newPanel) return;
+
+			/* Cancel any in-progress crossfade */
+			if (panelTimer) { clearTimeout(panelTimer); panelTimer = null; }
+
+			/* ── Switcher text: fade out → update → fade in ── */
+			projTitleEl.style.opacity = '0';
+			projTitleEl.style.transform = 'translateY(-4px)';
+			projDescEl.style.opacity  = '0';
+			projDescEl.style.transform = 'translateY(-4px)';
+			setTimeout(() => {
+				projTitleEl.textContent = style.title;
+				projDescEl.textContent  = style.desc;
+				projTitleEl.style.opacity = '';
+				projTitleEl.style.transform = '';
+				projDescEl.style.opacity  = '';
+				projDescEl.style.transform = '';
+			}, 190);
+
+			/* ── Panel crossfade ──
+			   Phase 1 (220ms): fade OUT old panel via inline style
+			   Phase 2: hide old, show new at opacity 0
+			   Phase 3 (380ms): fade IN new panel, trigger card reveals */
+			const FADE_OUT = 220;
+
+			if (oldPanel) {
+				oldPanel.style.transition = 'opacity 0.22s ease, transform 0.22s ease';
+				oldPanel.style.opacity    = '0';
+				oldPanel.style.transform  = 'translateY(-8px)';
+			}
+
+			panelTimer = setTimeout(() => {
+				/* Hide old */
+				if (oldPanel) {
+					oldPanel.classList.remove('active');
+					oldPanel.style.cssText = '';
+				}
+
+				/* Show new — start invisible */
+				if (newPanel) {
+					newPanel.style.cssText = 'opacity:0;transform:translateY(10px);transition:none;display:block;';
+					newPanel.classList.add('active');
+
+					requestAnimationFrame(() => requestAnimationFrame(() => {
+						newPanel.style.transition = 'opacity 0.38s ease, transform 0.38s ease';
+						newPanel.style.opacity    = '1';
+						newPanel.style.transform  = 'translateY(0)';
+
+						/* Clean up inline styles once fade-in completes */
+						setTimeout(() => { newPanel.style.cssText = ''; }, 420);
+
+						revealCards(newPanel);
+					}));
+				}
+
+				panelTimer = null;
+			}, FADE_OUT);
+		}
+
+		function projPrev() { projIndex = (projIndex - 1 + projStyles.length) % projStyles.length; renderProjView(); }
+		function projNext() { projIndex = (projIndex + 1) % projStyles.length; renderProjView(); }
+		function projGoTo(key) {
+			const idx = projStyles.findIndex(s => s.key === key);
+			if (idx < 0) return;
+			projIndex = idx;
+			renderProjView();
+		}
+
+		document.getElementById('projPrev').addEventListener('click', projPrev);
+		document.getElementById('projNext').addEventListener('click', projNext);
+		document.querySelectorAll('[data-ptarget]').forEach(btn => {
+			btn.addEventListener('click', () => projGoTo(btn.dataset.ptarget));
+		});
+
+		/* ── Scroll-driven scene controller ── */
+		const mainEl    = document.getElementById('main');
+		const mainBgEl  = document.getElementById('bg');
+		const overlayEl = document.getElementById('overlay');
+
+		function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+		function lerp01(v, start, end) { return clamp01((v - start) / (end - start)); }
+
+		let projBgReady = false;
+		let sceneRaf    = null;
+
+		function updateScene() {
+			const scrollY  = window.scrollY;
+			const vh       = window.innerHeight;
+			const aboutEl  = document.getElementById('content');
+			const aboutTop = aboutEl.offsetTop;   /* ≈ vh, right after cover */
+			const aboutH   = aboutEl.offsetHeight;
+
+			/* 1 ── Hero content: fade out in lower half of cover section */
+			const heroT = lerp01(scrollY, vh * 0.28, vh * 0.72);
+			mainEl.style.opacity = 1 - heroT;
+
+			/* 2 ── City bg + overlay: fade starts 20% into About Us, gone by 65% */
+			const bgT = lerp01(scrollY, aboutTop + aboutH * 0.18, aboutTop + aboutH * 0.62);
+			mainBgEl.style.opacity  = 1 - bgT;
+			overlayEl.style.opacity = 1 - bgT;
+
+			/* 3 ── Proj-bg: fade in from 42% → 90% through About Us
+			         It hides behind About Us (z-index 3 vs 50) until projects appear */
+			if (!projBgEl.classList.contains('bg-fading')) {
+				const pT = lerp01(scrollY, aboutTop + aboutH * 0.42, aboutTop + aboutH * 0.90);
+				projBgEl.style.opacity = pT;
+				if (pT > 0 && !projBgReady) {
+					renderProjView();   /* load correct bg + activate correct panel */
+					projBgReady = true;
+				}
+				if (pT === 0) projBgReady = false;
+			}
+		}
+
+		window.addEventListener('scroll', () => {
+			if (sceneRaf) return;
+			sceneRaf = requestAnimationFrame(() => { updateScene(); sceneRaf = null; });
+		}, { passive: true });
+
+		updateScene(); /* initial call */
+
+		/* ── Card reveal via IntersectionObserver ── */
+		const cardObserver = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('revealed');
+					cardObserver.unobserve(entry.target);
+				}
+			});
+		}, { threshold: 0.15 });
+
+		document.querySelectorAll('.proj-card-reveal').forEach(card => cardObserver.observe(card));
 	</script>
 </body>
 
