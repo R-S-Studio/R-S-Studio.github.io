@@ -814,7 +814,141 @@
 	.contact-card a:hover {
 		background: rgba(255,255,255,0.10) !important;
 	}
-	</style>
+	
+		/* ═══════════════════════════════════════════
+		   MINI CD PLAYER
+		═══════════════════════════════════════════ */
+		.mini-player {
+			display: flex;
+			align-items: center;
+			gap: 22px;
+			max-width: 420px;
+			margin: 0 auto 28px;
+			padding: 14px 22px 14px 16px;
+			background: rgba(10,13,22,0.65);
+			backdrop-filter: blur(14px);
+			-webkit-backdrop-filter: blur(14px);
+			border: 1px solid rgba(255,255,255,0.13);
+			border-radius: 22px;
+			max-height: 120px;
+			overflow: hidden;
+			transition: opacity 0.45s ease, transform 0.45s ease,
+			            max-height 0.45s ease, margin 0.45s ease,
+			            padding 0.45s ease, border-color 0.45s ease;
+		}
+		.mini-player.hidden {
+			opacity: 0;
+			pointer-events: none;
+			transform: translateY(6px);
+			max-height: 0;
+			margin-top: 0;
+			margin-bottom: 0;
+			padding-top: 0;
+			padding-bottom: 0;
+			border-color: transparent;
+		}
+
+		/* CD disc */
+		.cd-wrap {
+			position: relative;
+			flex-shrink: 0;
+			width: 74px; height: 74px;
+		}
+		.cd-disc {
+			width: 74px; height: 74px;
+			border-radius: 50%;
+			overflow: hidden;
+			position: relative;
+			animation: cd-spin 5s linear infinite;
+			animation-play-state: paused;
+			box-shadow: 0 0 0 3px rgba(255,255,255,0.08), 0 8px 28px rgba(0,0,0,0.6);
+			transition: box-shadow 0.3s ease;
+		}
+		.cd-disc.playing {
+			animation-play-state: running;
+			box-shadow: 0 0 0 3px rgba(255,255,255,0.25), 0 8px 32px rgba(0,0,0,0.7);
+		}
+		@keyframes cd-spin {
+			from { transform: rotate(0deg); }
+			to   { transform: rotate(360deg); }
+		}
+		.cd-cover-img {
+			width: 100%; height: 100%;
+			object-fit: cover;
+			border-radius: 50%;
+			display: block;
+		}
+		/* Centre hole */
+		.cd-hole {
+			position: absolute;
+			top: 50%; left: 50%;
+			transform: translate(-50%,-50%);
+			width: 16px; height: 16px;
+			border-radius: 50%;
+			background: #080b14;
+			border: 2px solid rgba(255,255,255,0.18);
+			z-index: 2;
+			pointer-events: none;
+		}
+		/* Play / pause button overlay */
+		.cd-play-btn {
+			position: absolute;
+			inset: 0;
+			border-radius: 50%;
+			border: none;
+			background: rgba(0,0,0,0.42);
+			color: #fff;
+			font-size: 1.25rem;
+			cursor: pointer;
+			display: flex; align-items: center; justify-content: center;
+			opacity: 0;
+			transition: opacity 0.22s;
+			z-index: 3;
+		}
+		.cd-wrap:hover .cd-play-btn { opacity: 1; }
+
+		/* Track info + progress */
+		.cd-info {
+			flex: 1;
+			min-width: 0;
+		}
+		.cd-label {
+			font-size: 0.62rem;
+			letter-spacing: 0.18em;
+			text-transform: uppercase;
+			color: rgba(255,255,255,0.3);
+			margin: 0 0 4px;
+		}
+		.cd-track-name {
+			font-size: 0.85rem;
+			font-weight: 600;
+			color: rgba(255,255,255,0.88);
+			margin: 0 0 10px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.cd-progress-wrap {
+			width: 100%; height: 3px;
+			background: rgba(255,255,255,0.1);
+			border-radius: 99px;
+			cursor: pointer;
+			overflow: hidden;
+		}
+		.cd-progress-bar {
+			height: 100%;
+			width: 0%;
+			background: rgba(255,255,255,0.75);
+			border-radius: 99px;
+			transition: width 0.4s linear;
+		}
+		.cd-time {
+			font-size: 0.62rem;
+			color: rgba(255,255,255,0.28);
+			margin: 5px 0 0;
+			letter-spacing: 0.05em;
+		}
+</style>
 </head>
 
 <body class="is-preload">
@@ -929,6 +1063,26 @@
 			<button id="projNext" class="proj-sw-btn" type="button" aria-label="Next style">&#10095;</button>
 		</div>
 
+
+		<!-- ── Mini CD Player ── -->
+		<div id="mini-player" class="mini-player hidden">
+			<div class="cd-wrap">
+				<div id="cd-disc" class="cd-disc">
+					<img id="cd-cover" class="cd-cover-img" src="" alt="cover">
+					<div class="cd-hole"></div>
+				</div>
+				<button id="cd-play-btn" class="cd-play-btn" aria-label="Play / Pause">▶</button>
+			</div>
+			<div class="cd-info">
+				<p class="cd-label">Now Playing</p>
+				<p id="cd-track-name" class="cd-track-name">—</p>
+				<div id="cd-progress-wrap" class="cd-progress-wrap">
+					<div id="cd-progress-bar" class="cd-progress-bar"></div>
+				</div>
+				<p id="cd-time" class="cd-time">0:00 / 0:00</p>
+			</div>
+		</div>
+		<audio id="cd-audio" preload="none"></audio>
 		<!-- Intro panel -->
 		<div class="proj-panel active" data-pstyle="intro">
 			<div class="proj-intro">
@@ -963,6 +1117,12 @@
 						<button type="button" data-ptarget="emo">
 							<span class="style-tile-media" style="--tile-bg: url('assets/css/images/page_bgs/bg_emo.jpg')"><span class="style-tile-mini-tag">Emo</span></span>
 							<span class="style-tile-text"><span class="style-tile-label">Emo / Anime Vibes</span><span class="style-tile-sub">Youthful emotional narrative</span></span>
+						</button>
+					</li>
+					<li>
+						<button type="button" data-ptarget="game">
+							<span class="style-tile-media" style="--tile-bg: url('assets/css/images/page_bgs/bg_game.jpg')"><span class="style-tile-mini-tag">Game OST</span></span>
+							<span class="style-tile-text"><span class="style-tile-label">Game OST</span><span class="style-tile-sub">Scores built for interactive worlds</span></span>
 						</button>
 					</li>
 				</ul>
@@ -1139,6 +1299,22 @@
 			</div>
 		</div>
 
+		<!-- Game OST panel -->
+		<div class="proj-panel" data-pstyle="game">
+			<div class="works-grid">
+				<a href="https://safari-mu.itch.io/signal-split" target="_blank" class="work-card proj-card-reveal">
+					<div class="work-image-wrapper">
+						<img src="assets/css/images/projects/game_1.jpg" alt="Signal Split">
+						<div class="work-overlay"><i class="icon solid fa-gamepad"></i></div>
+					</div>
+					<div class="work-info">
+						<h3>Signal Split</h3>
+						<p>Produced by R&amp;S Studio</p>
+					</div>
+				</a>
+			</div>
+		</div>
+
 
 	</section>
 
@@ -1269,12 +1445,13 @@
 
 		/* ── Inline Projects Switcher ── */
 		const projStyles = [
-			{ key: 'intro',      title: 'Projects Home',          desc: 'Style directory. Right to Glitch / Hyper, left to Emo / Anime Vibes.',                                              bg: 'assets/css/images/page_bgs/bg_1.jpg',          static: false },
-			{ key: 'glitch',     title: 'Glitch / Hyper',         desc: 'Digital distortion, clipped transients, and cyber-edged groove design for high-energy edits.',                     bg: 'assets/css/images/page_bgs/bg_glitch.jpg',     static: true  },
-			{ key: 'piano',      title: 'Piano Core',             desc: 'Melody-forward writing focused on emotional piano lines and cinematic harmonic movement.',                          bg: 'assets/css/images/page_bgs/bg_piano.jpg',      static: true  },
-			{ key: 'acoustic',   title: 'Acoustic Folk',          desc: 'Wood-guitar texture and singer-songwriter intimacy with organic space and warm tone.',                             bg: 'assets/css/images/page_bgs/bg_flok.jpg',       static: true  },
-			{ key: 'atmosphere', title: 'Atmosphere / Soundscape', desc: 'Scene-building ambient layers for suspense, exploration, and cinematic mood transitions.',                        bg: 'assets/css/images/page_bgs/bg_atmosphere.jpg', static: true  },
-			{ key: 'emo',        title: 'Emo / Anime Vibes',      desc: 'Emotion-forward progressions and melodic motifs tailored for anime-coded youth drama energy.',                    bg: 'assets/css/images/page_bgs/bg_emo.jpg',        static: true  }
+			{ key: 'intro',      title: 'Projects Home',           desc: 'Style directory. Right to Glitch / Hyper, left to Emo / Anime Vibes.',                                              bg: 'assets/css/images/page_bgs/bg_1.jpg',          static: false, audio: null,                    cover: null },
+			{ key: 'glitch',     title: 'Glitch / Hyper',          desc: 'Digital distortion, clipped transients, and cyber-edged groove design for high-energy edits.',                     bg: 'assets/css/images/page_bgs/bg_glitch.jpg',     static: true,  audio: 'musics/glitch.mp3',     cover: 'musics/glitch.jpg' },
+			{ key: 'piano',      title: 'Piano Core',              desc: 'Melody-forward writing focused on emotional piano lines and cinematic harmonic movement.',                          bg: 'assets/css/images/page_bgs/bg_piano.jpg',      static: true,  audio: 'musics/piano.mp3',      cover: 'musics/piano.jpg' },
+			{ key: 'acoustic',   title: 'Acoustic Folk',           desc: 'Wood-guitar texture and singer-songwriter intimacy with organic space and warm tone.',                             bg: 'assets/css/images/page_bgs/bg_flok.jpg',       static: true,  audio: 'musics/acoustic.mp3',   cover: 'musics/acoustic.jpg' },
+			{ key: 'atmosphere', title: 'Atmosphere / Soundscape', desc: 'Scene-building ambient layers for suspense, exploration, and cinematic mood transitions.',                        bg: 'assets/css/images/page_bgs/bg_atmosphere.jpg', static: true,  audio: 'musics/atmosphere.mp3', cover: 'musics/atmosphere.jpg' },
+			{ key: 'emo',        title: 'Emo / Anime Vibes',       desc: 'Emotion-forward progressions and melodic motifs tailored for anime-coded youth drama energy.',                    bg: 'assets/css/images/page_bgs/bg_emo.jpg',        static: true,  audio: 'musics/emo.mp3',        cover: 'musics/emo.jpg' },
+			{ key: 'game',       title: 'Game OST',                desc: 'Immersive soundscapes and interactive scores crafted for games — from tension to triumph.',                       bg: 'assets/css/images/page_bgs/bg_game.jpg',       static: true,  audio: 'musics/game.mp3',       cover: 'musics/game.jpg' }
 		];
 
 		let projIndex   = 0;
@@ -1320,6 +1497,7 @@
 
 			/* Always switch the background */
 			switchProjBg(style.bg, style.static);
+			cdUpdatePlayer(style);
 
 			/* Same panel — nothing to crossfade */
 			if (oldPanel === newPanel) return;
@@ -1468,6 +1646,83 @@
 		}, { threshold: 0.15 });
 
 		document.querySelectorAll('.proj-card-reveal').forEach(card => cardObserver.observe(card));
+
+		/* ── Mini CD Player ─────────────────────────────────────────── */
+		const cdAudio       = document.getElementById('cd-audio');
+		const cdDisc        = document.getElementById('cd-disc');
+		const cdCover       = document.getElementById('cd-cover');
+		const cdPlayBtn     = document.getElementById('cd-play-btn');
+		const cdTrackName   = document.getElementById('cd-track-name');
+		const cdProgressBar = document.getElementById('cd-progress-bar');
+		const cdTime        = document.getElementById('cd-time');
+		const miniPlayer    = document.getElementById('mini-player');
+
+		let cdCurrentKey = null;
+
+		function fmtTime(s) {
+			if (!isFinite(s)) return '0:00';
+			const m = Math.floor(s / 60);
+			const sec = String(Math.floor(s % 60)).padStart(2, '0');
+			return m + ':' + sec;
+		}
+
+		function cdSetPlaying(playing) {
+			cdDisc.classList.toggle('playing', playing);
+			cdPlayBtn.textContent = playing ? '\u275a\u275a' : '\u25b6';
+		}
+
+		function cdUpdatePlayer(style) {
+			if (!style.audio) {
+				miniPlayer.classList.add('hidden');
+				cdAudio.pause();
+				cdSetPlaying(false);
+				cdCurrentKey = null;
+				return;
+			}
+			miniPlayer.classList.remove('hidden');
+			cdTrackName.textContent = style.title;
+
+			if (cdCurrentKey !== style.key) {
+				const wasPlaying = !cdAudio.paused;
+				cdAudio.pause();
+				cdSetPlaying(false);
+				cdCurrentKey = style.key;
+				cdCover.src  = style.cover;
+				cdAudio.src  = style.audio;
+				cdAudio.load();
+				cdProgressBar.style.width = '0%';
+				cdTime.textContent = '0:00 / 0:00';
+				if (wasPlaying) {
+					cdAudio.play().then(() => cdSetPlaying(true)).catch(() => {});
+				}
+			}
+		}
+
+		cdPlayBtn.addEventListener('click', () => {
+			if (cdAudio.paused) {
+				cdAudio.play().then(() => cdSetPlaying(true)).catch(() => {});
+			} else {
+				cdAudio.pause();
+				cdSetPlaying(false);
+			}
+		});
+
+		document.getElementById('cd-progress-wrap').addEventListener('click', (e) => {
+			if (!cdAudio.duration) return;
+			const rect = e.currentTarget.getBoundingClientRect();
+			const ratio = (e.clientX - rect.left) / rect.width;
+			cdAudio.currentTime = ratio * cdAudio.duration;
+		});
+
+		cdAudio.addEventListener('timeupdate', () => {
+			if (!cdAudio.duration) return;
+			const pct = (cdAudio.currentTime / cdAudio.duration) * 100;
+			cdProgressBar.style.width = pct.toFixed(1) + '%';
+			cdTime.textContent = fmtTime(cdAudio.currentTime) + ' / ' + fmtTime(cdAudio.duration);
+		});
+
+		cdAudio.addEventListener('ended', () => cdSetPlaying(false));
+
 	</script>
 </body>
 
