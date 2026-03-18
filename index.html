@@ -102,21 +102,6 @@
 			overflow: hidden;
 		}
 
-		/* --- Scale to match 140% zoom visual --- */
-		#header {
-			zoom: 1.4;
-		}
-
-		/* Ensure header icons sit above the diagonal overlay glass */
-		#main {
-			z-index: 5 !important;
-		}
-
-		.content-section,
-		#projects {
-			zoom: 1.4;
-		}
-
 		/* --- Navigation --- */
 		#header nav ul {
 			display: flex;
@@ -697,6 +682,30 @@
 				grid-template-columns: 1fr;
 			}
 
+			.proj-directory {
+				grid-template-columns: 1fr;
+				max-width: 520px;
+			}
+
+			.proj-directory li:last-child:nth-child(odd) {
+				grid-column: auto;
+				max-width: none;
+				margin: 0;
+			}
+
+			.style-tile-media {
+				width: 80px;
+				height: 80px;
+			}
+
+			.style-tile-label {
+				font-size: 0.88rem;
+			}
+
+			.style-tile-sub {
+				font-size: 0.76rem;
+			}
+
 			.top-project-link {
 				top: 14px;
 				right: 14px;
@@ -984,8 +993,6 @@
 			<div id="bg"></div>
 			<div id="overlay"></div>
 			<div id="proj-bg"></div>
-		<div class="contact-bg-strip"></div>
-		<div class="contact-overlay-strip"></div>
 			<div id="main">
 				<header id="header">
 					<h1 style="font-weight: 900; letter-spacing: -0.04em;">R&S Studio</h1>
@@ -1412,10 +1419,10 @@
 	</section>
 
 	<!-- Footer Signature -->
-	<footer style="padding: 40px 0; text-align: center; background: #070a11; position: relative; z-index: 60; border-top: 1px solid rgba(255,255,255,0.04);">
+	<footer style="padding: 60px 0; text-align: center; background: #070a11; position: relative; z-index: 60;">
 		<p
 			style="font-size: 0.7rem; color: rgba(255,255,255,0.2); letter-spacing: 2px; text-transform: uppercase; margin: 0;">
-			DESIGNED AND DEVELOPED By SAFARA & ROURI
+			Designed & Developed by Safara and Rouri &nbsp;&bull;&nbsp; © 2026 R&amp;S Studio. All rights reserved.
 		</p>
 	</footer>
 
@@ -1586,42 +1593,28 @@
 		let sceneRaf    = null;
 
 		function updateScene() {
-			const scrollY    = window.scrollY;
-			const vh         = window.innerHeight;
-			const aboutEl    = document.getElementById('content');
-			const aboutTop   = aboutEl.offsetTop;
-			const aboutH     = aboutEl.offsetHeight;
-			const contactEl  = document.getElementById('contact');
-			const contactTop = contactEl.offsetTop;
+			const scrollY  = window.scrollY;
+			const vh       = window.innerHeight;
+			const aboutEl  = document.getElementById('content');
+			const aboutTop = aboutEl.offsetTop;   /* ≈ vh, right after cover */
+			const aboutH   = aboutEl.offsetHeight;
 
 			/* 1 ── Hero content: fade out in lower half of cover section */
 			const heroT = lerp01(scrollY, vh * 0.28, vh * 0.72);
 			mainEl.style.opacity = 1 - heroT;
 
-			/* 2 ── City bg fades out 20%→65% through About Us */
+			/* 2 ── City bg + overlay: fade starts 20% into About Us, gone by 65% */
 			const bgT = lerp01(scrollY, aboutTop + aboutH * 0.18, aboutTop + aboutH * 0.62);
+			mainBgEl.style.opacity  = 1 - bgT;
+			overlayEl.style.opacity = 1 - bgT;
 
-			/* 3 ── Proj-bg fades in 42%→90% through About Us */
-			const pT = lerp01(scrollY, aboutTop + aboutH * 0.42, aboutTop + aboutH * 0.90);
-
-			/* 4 ── Contact: city bg fades back in, proj-bg fades out */
-			const cT = lerp01(scrollY, contactTop - vh * 0.55, contactTop - vh * 0.05);
-
-			/* Apply final opacities */
-			mainBgEl.style.opacity  = (1 - bgT).toFixed(3);
-			overlayEl.style.opacity = (1 - bgT).toFixed(3);
-
-			/* Contact bg + overlay: fade in as proj-bg fades out */
-			const contactBgEl  = document.querySelector('.contact-bg-strip');
-			const contactOvEl  = document.querySelector('.contact-overlay-strip');
-			if (contactBgEl) contactBgEl.style.opacity = cT.toFixed(3);
-			if (contactOvEl) contactOvEl.style.opacity = cT.toFixed(3);
-
+			/* 3 ── Proj-bg: fade in from 42% → 90% through About Us
+			         It hides behind About Us (z-index 3 vs 50) until projects appear */
 			if (!projBgEl.classList.contains('bg-fading')) {
-				const finalPT = pT * (1 - cT);
-				projBgEl.style.opacity = finalPT.toFixed(3);
+				const pT = lerp01(scrollY, aboutTop + aboutH * 0.42, aboutTop + aboutH * 0.90);
+				projBgEl.style.opacity = pT;
 				if (pT > 0 && !projBgReady) {
-					renderProjView();
+					renderProjView();   /* load correct bg + activate correct panel */
 					projBgReady = true;
 				}
 				if (pT === 0) projBgReady = false;
